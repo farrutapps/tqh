@@ -86,8 +86,11 @@ namespace http {
                 space_before_header_value,
                 header_value,
                 expecting_newline_2,
-                expecting_newline_3
+                expecting_newline_3,
+                expecting_data,
+                data_body
             } state_;
+            int data_body_idx = 0;
         };
 
     } // namespace server

@@ -276,7 +276,36 @@ namespace http {
                         return bad;
                     }
                 case expecting_newline_3:
-                    return (input == '\n') ? good : bad;
+                    if (input == '\n') {
+                        if (req.method == "POST") {
+                            state_ = expecting_data;
+                            return indeterminate;
+                        }
+                        else return good;
+                    } else return bad;
+
+                case expecting_data:
+                    if (req.headers[3].name == "Content-Type" && req.headers[3].value == "application/json" && req.headers[4].name == "Content-Length") {
+                        if (data_body_idx < std::stoi(req.headers[4].value)) {
+                            state_ = data_body;
+                            req.data.push_back(input);
+                            data_body_idx += 1;
+                            return indeterminate;
+                        } else return good;
+                    } else return bad;
+
+                case data_body: {
+                    const int content_length = std::stoi(req.headers[4].value);
+                    if (data_body_idx < content_length) {
+                        req.data.push_back(input);
+                        data_body_idx += 1;
+                    } else if (data_body_idx > content_length) return bad;
+
+                    if (data_body_idx == content_length) {
+                        return good;
+                    }
+                    return indeterminate;
+                }
                 default:
                     return bad;
             }

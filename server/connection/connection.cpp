@@ -49,8 +49,19 @@ namespace http {
 
                                             if (result == request_parser::good)
                                             {
-                                                request_handler_.handle_request(request_, reply_);
-                                                do_write();
+                                                if (request_.method == "GET") {
+                                                    request_handler_.handle_get_request(request_, reply_);
+                                                    do_write();
+                                                }
+                                                else if (request_.method == "POST") {
+                                                    request_handler_.handle_post_request(request_, reply_);
+                                                    do_write();
+                                                }
+                                                else {
+                                                    throw std::invalid_argument ("Not implemented.");
+                                                }
+
+
                                             }
                                             else if (result == request_parser::bad)
                                             {

@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include "header.hpp"
+#include "../utils/json.hpp"
 
 namespace http {
     namespace server {
@@ -26,6 +27,7 @@ namespace http {
             int http_version_major;
             int http_version_minor;
             std::vector<header> headers;
+            std::string data;
         };
 
     } // namespace server

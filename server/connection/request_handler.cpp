@@ -22,9 +22,10 @@ namespace http {
         request_handler::request_handler(const std::string& doc_root)
                 : doc_root_(doc_root)
         {
+            rest_endpoints.push_back(new data_update_handler());
         }
 
-        void request_handler::handle_request(const request& req, reply& rep)
+        void request_handler::handle_get_request(const request &req, reply &rep)
         {
             // Decode url to path.
             std::string request_path;
@@ -76,6 +77,24 @@ namespace http {
             rep.headers[0].value = std::to_string(rep.content.size());
             rep.headers[1].name = "Content-Type";
             rep.headers[1].value = mime_types::extension_to_type(extension);
+        }
+
+        void request_handler::handle_post_request(const request &req, reply &rep) {
+            // Decode url to path.
+            std::string request_path;
+            if (!url_decode(req.uri, request_path))
+            {
+                rep = reply::stock_reply(reply::bad_request);
+                return;
+            }
+
+            for (int i=0; i<rest_endpoints.size(); ++i) {
+                if (rest_endpoints[i]->get_uri() == req.uri) {
+                    rest_endpoint_handler *endpoint = rest_endpoints[i];
+                    endpoint->perform_action(req);
+                }
+            }
+
         }
 
         bool request_handler::url_decode(const std::string& in, std::string& out)
