@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/appbar_padding_top"
+    android:paddingTop="@dimen/appbar_padding_top"
+    android:paddingBottom="@dimen/appbar_padding_top"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/led_wz"
+        android:layout_width="@dimen/led_diam"
+        android:layout_height="@dimen/led_diam"
+        android:layout_marginRight="@dimen/led_dist"
+        android:background="@drawable/led_off" />
+
+    <ImageView
+        android:id="@+id/led_fk"
+        android:layout_width="@dimen/led_diam"
+        android:layout_height="@dimen/led_diam"
+        android:layout_marginRight="@dimen/led_dist"
+        android:background="@drawable/led_off" />
+
+    <TextView
+        android:id="@+id/tv_status_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/appbar_padding_top"
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:text="Hambre"/>
+
+
+</LinearLayout>

@@ -6,11 +6,163 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.farrutaps.tqhapp.MainActivity$PlaceholderFragment">
+    tools:context=".view.MainActivity$PlaceholderFragment">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:background="@drawable/bg_layout"
+            android:layout_marginRight="@dimen/appbar_padding_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/appbar_padding_top">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/led_dist"
+                    android:text="@string/wz" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fk" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/lv_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="@drawable/bg_layout"
+            android:layout_marginLeft="@dimen/appbar_padding_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/appbar_padding_top">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_schedule" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_home_dark" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/appbar_padding_top">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/wz" />
+
+                    <ImageView
+                        android:id="@+id/led_wz_8"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_wz_4"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_wz_2"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_wz_1"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/fk" />
+
+                    <ImageView
+                        android:id="@+id/led_fk_8"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_fk_4"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_fk_2"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+
+                    <ImageView
+                        android:id="@+id/led_fk_1"
+                        android:layout_width="@dimen/led_diam"
+                        android:layout_height="@dimen/led_diam"
+                        android:layout_marginRight="@dimen/led_dist"
+                        android:background="@drawable/led_off" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

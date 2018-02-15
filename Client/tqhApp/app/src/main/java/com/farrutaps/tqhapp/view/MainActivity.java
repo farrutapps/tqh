@@ -1,4 +1,4 @@
-package com.farrutaps.tqhapp;
+package com.farrutaps.tqhapp.view;
 
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,10 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
 
-import android.widget.TextView;
+import com.farrutaps.tqhapp.Adapters.StatusAdapter;
+import com.farrutaps.tqhapp.R;
+import com.farrutaps.tqhapp.model.Options;
+import com.farrutaps.tqhapp.model.User;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int NUM_TABS = 2;
+    private static User userWZ, userFK;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -43,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
+        // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -53,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        // Set icons to the tabs.
+        int[] icons = {R.drawable.ic_people, R.drawable.ic_person};
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setIcon(icons[i]);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        userWZ = new User("sonia");
+        userFK = new User("sebastian");
     }
 
 
@@ -116,12 +132,70 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            int section = getArguments().getInt(ARG_SECTION_NUMBER);
+            View rootView = null;
+
+            switch(section)
+            {
+                case 1:
+                    rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+                    // List View with status
+                    ListView lvStatus = (ListView) rootView.findViewById(R.id.lv_status);
+                    StatusAdapter lvAdapter = new StatusAdapter(rootView.getContext(), Options.values(), userWZ, userFK);
+                    lvStatus.setAdapter(lvAdapter);
+
+                    // Home back LEDs
+                    ImageView ledWZ1 = (ImageView) rootView.findViewById(R.id.led_wz_1);
+                    ImageView ledWZ2 = (ImageView) rootView.findViewById(R.id.led_wz_2);
+                    ImageView ledWZ4 = (ImageView) rootView.findViewById(R.id.led_wz_4);
+                    ImageView ledWZ8 = (ImageView) rootView.findViewById(R.id.led_wz_8);
+                    ImageView[] ledsWZ = {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
+                    userWZ.setHour(1);
+                    this.setBackHomeLeds(userWZ, ledsWZ, rootView);
+
+                    ImageView ledFK1 = (ImageView) rootView.findViewById(R.id.led_fk_1);
+                    ImageView ledFK2 = (ImageView) rootView.findViewById(R.id.led_fk_2);
+                    ImageView ledFK4 = (ImageView) rootView.findViewById(R.id.led_fk_4);
+                    ImageView ledFK8 = (ImageView) rootView.findViewById(R.id.led_fk_8);
+                    ImageView[] ledsFK = {ledFK8, ledFK4, ledFK2, ledFK1};
+                    userFK.setHour(12);
+                    this.setBackHomeLeds(userFK, ledsFK, rootView);
+
+                    // testing change leds
+                    userWZ.setStatus(Options.EMPITUFE,true);
+                    userWZ.setStatus(Options.CACA,true);
+                    userFK.setStatus(Options.MASATGE,true);
+                    lvAdapter.notifyDataSetChanged();
+
+                    break;
+
+                case 2:
+                    rootView = inflater.inflate(R.layout.fragment_user, container, false);
+
+                    break;
+            }
+
             return rootView;
         }
+
+        private void setBackHomeLeds(User user, ImageView[] leds, View view)
+        {
+            String binStr = Integer.toBinaryString(user.getHour());
+            while(binStr.length() < 4)
+            {
+                binStr = "0" + binStr;
+            }
+            for(int i = 0; i < binStr.length(); i++) {
+                if (binStr.charAt(i) == '1')
+                    leds[i].setBackground(view.getResources().getDrawable(R.drawable.led_on));
+                else
+                    leds[i].setBackground(view.getResources().getDrawable(R.drawable.led_off));
+            }
+        }
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -142,18 +216,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 2 total pages.
-            return 2;
+            // Show total pages.
+            return NUM_TABS;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
+            /*switch (position) {
                 case 0:
                     return "SECTION 1";
                 case 1:
                     return "SECTION 2";
-            }
+            }*/
             return null;
         }
     }
