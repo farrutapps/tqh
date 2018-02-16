@@ -2,8 +2,6 @@ package com.farrutaps.tqhapp.Adapters;
 
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +24,11 @@ public class StatusAdapter extends BaseAdapter {
     private User userWZ, userFK;
     private LayoutInflater layoutInflater = null;
 
-    public StatusAdapter(Context context, Options[] options, User userWZ, User userFK) {
+    public StatusAdapter(Context context, Options[] options, List<User> users) {
         this.context = context;
         this.options = new ArrayList<>(Arrays.asList(options));
-        this.userWZ = userWZ;
-        this.userFK = userFK;
+        this.userWZ = users.get(0);
+        this.userFK = users.get(1);
         this.layoutInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -63,9 +61,10 @@ public class StatusAdapter extends BaseAdapter {
 
         // Set item data
         statusHolder.tvStatus.setText(options.get(position).getTitle());
+
         boolean wzOn, fkOn;
-        wzOn = userWZ.getStatus().getStatus(options.get(position));
-        fkOn = userFK.getStatus().getStatus(options.get(position));
+        wzOn = userWZ.getStatus().getOnFromOption(options.get(position));
+        fkOn = userFK.getStatus().getOnFromOption(options.get(position));
         setLedColor(statusHolder.ledWZ, wzOn, convertView);
         setLedColor(statusHolder.ledFK, fkOn, convertView);
 

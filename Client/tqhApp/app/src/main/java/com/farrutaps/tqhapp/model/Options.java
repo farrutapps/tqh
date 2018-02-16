@@ -1,5 +1,7 @@
 package com.farrutaps.tqhapp.model;
 
+import java.util.Random;
+
 /**
  * Created by Sònia Batllori on 15/02/2018.
  */
@@ -16,7 +18,6 @@ public enum Options {
     LO_DEJAMOS("Lo dejamos");
 
     private String title;
-
     Options(String title) {
         this.title = title;
     }
@@ -25,4 +26,9 @@ public enum Options {
         return title;
     }
 
+    public Options getRandom() {
+        Random r = new Random();
+        int index = r.nextInt(Options.values().length);
+        return Options.values()[index];
+    }
 }

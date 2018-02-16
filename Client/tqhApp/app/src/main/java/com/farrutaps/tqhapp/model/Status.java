@@ -17,11 +17,11 @@ public class Status {
         return statusInfoMap;
     }
 
-    public boolean getStatus(Options op) {
+    public boolean getOnFromOption(Options op) {
         return statusInfoMap.get(op);
     }
 
-    public void setStatus(Options op, Boolean status) {
-        statusInfoMap.put(op, status);
+    public void setOnToOption(Options op, Boolean on) {
+        statusInfoMap.put(op, on);
     }
 }

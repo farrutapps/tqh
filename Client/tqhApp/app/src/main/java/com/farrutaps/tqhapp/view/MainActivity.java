@@ -21,66 +21,89 @@ import android.widget.ListView;
 
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
+import com.farrutaps.tqhapp.controller.Controller;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
+
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_TABS = 2;
-    private static User userWZ, userFK;
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+    /* Activity Resources*/
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private int[] tabLayoutIcons = {R.drawable.ic_people, R.drawable.ic_person};
+    private FloatingActionButton fab;
+
+    /* Main Fragment Resources */
+    private static ListView lvStatus;
+    private static StatusAdapter lvAdapter;
+    private static ImageView ledWZ1, ledWZ2, ledWZ4, ledWZ8, ledFK1, ledFK2, ledFK4, ledFK8;
+
+    /* User Fragment Resources */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        new Controller();
 
-        // Set up the ViewPager with the sections adapter.
+        this.initResources();
+        this.setResources();
+    }
+
+    private void initResources() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         mViewPager = (ViewPager) findViewById(R.id.container);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+    }
+
+    private void setResources () {
+        /* Toolbar */
+        setSupportActionBar(toolbar);
+
+        /* ViewPager */
+        // Create the adapter that will return a fragment for each of the
+        // primary sections of the activity and set up the ViewPager with the sections adapter.
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        /* TabLayout */
         tabLayout.setupWithViewPager(mViewPager);
-        // Set icons to the tabs.
-        int[] icons = {R.drawable.ic_people, R.drawable.ic_person};
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            tabLayout.getTabAt(i).setIcon(icons[i]);
+            tabLayout.getTabAt(i).setIcon(tabLayoutIcons[i]);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /* FloatingActionButton */
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                test(view);
             }
         });
-
-        userWZ = new User("sonia");
-        userFK = new User("sebastian");
     }
 
+    private void test(View view) {
+        Random r = new Random();
+        Controller.getUsers().get(0).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
+        Controller.getUsers().get(1).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
+        lvAdapter.notifyDataSetChanged();
+
+        Controller.getUsers().get(0).setBackHome(r.nextInt(12));
+        Controller.getUsers().get(1).setBackHome(r.nextInt(12));
+        PlaceholderFragment.setBackHomeLeds(view);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,59 +163,91 @@ public class MainActivity extends AppCompatActivity {
             {
                 case 1:
                     rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-                    // List View with status
-                    ListView lvStatus = (ListView) rootView.findViewById(R.id.lv_status);
-                    StatusAdapter lvAdapter = new StatusAdapter(rootView.getContext(), Options.values(), userWZ, userFK);
-                    lvStatus.setAdapter(lvAdapter);
-
-                    // Home back LEDs
-                    ImageView ledWZ1 = (ImageView) rootView.findViewById(R.id.led_wz_1);
-                    ImageView ledWZ2 = (ImageView) rootView.findViewById(R.id.led_wz_2);
-                    ImageView ledWZ4 = (ImageView) rootView.findViewById(R.id.led_wz_4);
-                    ImageView ledWZ8 = (ImageView) rootView.findViewById(R.id.led_wz_8);
-                    ImageView[] ledsWZ = {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
-                    userWZ.setHour(1);
-                    this.setBackHomeLeds(userWZ, ledsWZ, rootView);
-
-                    ImageView ledFK1 = (ImageView) rootView.findViewById(R.id.led_fk_1);
-                    ImageView ledFK2 = (ImageView) rootView.findViewById(R.id.led_fk_2);
-                    ImageView ledFK4 = (ImageView) rootView.findViewById(R.id.led_fk_4);
-                    ImageView ledFK8 = (ImageView) rootView.findViewById(R.id.led_fk_8);
-                    ImageView[] ledsFK = {ledFK8, ledFK4, ledFK2, ledFK1};
-                    userFK.setHour(12);
-                    this.setBackHomeLeds(userFK, ledsFK, rootView);
-
-                    // testing change leds
-                    userWZ.setStatus(Options.EMPITUFE,true);
-                    userWZ.setStatus(Options.CACA,true);
-                    userFK.setStatus(Options.MASATGE,true);
-                    lvAdapter.notifyDataSetChanged();
-
+                    this.setMainFragment(rootView);
                     break;
 
                 case 2:
                     rootView = inflater.inflate(R.layout.fragment_user, container, false);
-
+                    this.setUserFragment(rootView);
                     break;
             }
 
             return rootView;
         }
 
-        private void setBackHomeLeds(User user, ImageView[] leds, View view)
+        /*** MAIN FRAGMENT ***/
+        private void setMainFragment(View rootView) {
+            initMainResources(rootView);
+            setMainResources(rootView);
+        }
+
+        private void initMainResources(View rootView) {
+            // ListView with Status Options for both users
+            lvStatus = (ListView) rootView.findViewById(R.id.lv_status);
+
+            // Back Home LEDs
+            ledWZ1 = (ImageView) rootView.findViewById(R.id.led_wz_1);
+            ledWZ2 = (ImageView) rootView.findViewById(R.id.led_wz_2);
+            ledWZ4 = (ImageView) rootView.findViewById(R.id.led_wz_4);
+            ledWZ8 = (ImageView) rootView.findViewById(R.id.led_wz_8);
+            ledFK1 = (ImageView) rootView.findViewById(R.id.led_fk_1);
+            ledFK2 = (ImageView) rootView.findViewById(R.id.led_fk_2);
+            ledFK4 = (ImageView) rootView.findViewById(R.id.led_fk_4);
+            ledFK8 = (ImageView) rootView.findViewById(R.id.led_fk_8);
+        }
+
+        private void setMainResources(View rootView) {
+            /* ListView */
+            try {
+                lvAdapter = new StatusAdapter(rootView.getContext(), Options.values(), Controller.getUsers());
+                lvStatus.setAdapter(lvAdapter);
+            } catch (Exception e) {}
+
+            /* LEDs */
+            setBackHomeLeds(rootView);
+        }
+
+        public static void setBackHomeLeds(View rootView){
+            ImageView[] ledsWZ = {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
+            try {
+                setUserBackHomeLeds(Controller.getUsers().get(0), ledsWZ, rootView);
+            } catch (Exception e) {}
+
+            ImageView[] ledsFK = {ledFK8, ledFK4, ledFK2, ledFK1};
+            try {
+                setUserBackHomeLeds(Controller.getUsers().get(1), ledsFK, rootView);
+            } catch (Exception e) {}
+        }
+
+        private static void setUserBackHomeLeds(User user, ImageView[] leds, View rootView)
         {
-            String binStr = Integer.toBinaryString(user.getHour());
-            while(binStr.length() < 4)
-            {
+            // Get the decimal hour in binary base with 4 digits
+            String binStr = Integer.toBinaryString(user.getBackHome());
+            while (binStr.length() < 4) {
                 binStr = "0" + binStr;
             }
+
+            // Turn the LEDs on or off depending on the binary result
             for(int i = 0; i < binStr.length(); i++) {
                 if (binStr.charAt(i) == '1')
-                    leds[i].setBackground(view.getResources().getDrawable(R.drawable.led_on));
+                    leds[i].setBackground(rootView.getResources().getDrawable(R.drawable.led_on));
                 else
-                    leds[i].setBackground(view.getResources().getDrawable(R.drawable.led_off));
+                    leds[i].setBackground(rootView.getResources().getDrawable(R.drawable.led_off));
             }
+        }
+
+        /*** USER FRAGMENT ***/
+        private void setUserFragment(View rootView) {
+            initUserResources(rootView);
+            setUserResources(rootView);
+        }
+
+        private void initUserResources(View rootView) {
+            // TODO
+        }
+
+        private void setUserResources(View rootView) {
+            // TODO
         }
     }
 
@@ -222,12 +277,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            /*switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-            }*/
             return null;
         }
     }
