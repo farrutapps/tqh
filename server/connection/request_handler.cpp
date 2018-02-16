@@ -14,11 +14,8 @@
 namespace http {
     namespace server {
 
-        request_handler::request_handler(const std::string& doc_root)
-                : doc_root_(doc_root)
-        {
-            rest_endpoints.push_back(new data_update_handler());
-        }
+        request_handler::request_handler(const std::vector<rest_endpoint_handler*> rest_endpoints)
+                : rest_endpoints(rest_endpoints) {}
 
         void request_handler::handle_request(const request &req, reply &rep) {
             // Decode url to path.

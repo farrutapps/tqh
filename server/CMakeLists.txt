@@ -31,10 +31,11 @@ add_executable(server
         connection/server.cpp
         connection/request_parser.hpp
         connection/mime_types.hpp
-        connection/rest_endpoints/rest_endpoint_handler.hpp
-        connection/rest_endpoints/data_update_handler.cpp
-        connection/rest_endpoints/data_update_handler.hpp
-        connection/rest_endpoints/publish_info.cpp connection/rest_endpoints/publish_info.hpp)
+        connection/rest_endpoint_handler.hpp
+        controller/rest_endpoints/data_update_handler.cpp
+        controller/rest_endpoints/data_update_handler.hpp
+        controller/rest_endpoints/publish_info.cpp
+        controller/rest_endpoints/publish_info.hpp controller/controller.cpp controller/controller.hpp controller/user.hpp)
 
 
 if(Boost_FOUND)

@@ -12,8 +12,7 @@
 #define HTTP_REQUEST_HANDLER_HPP
 
 #include <string>
-#include "rest_endpoints/rest_endpoint_handler.hpp"
-#include "rest_endpoints/data_update_handler.hpp"
+#include "rest_endpoint_handler.hpp"
 
 namespace http {
     namespace server {
@@ -29,15 +28,12 @@ namespace http {
             request_handler& operator=(const request_handler&) = delete;
 
             /// Construct with a directory containing files to be served.
-            explicit request_handler(const std::string& doc_root);
+            explicit request_handler(std::vector<rest_endpoint_handler*> rest_endpoints);
 
             /// Handle a post request and produce a reply.
             void handle_request(const request &req, reply &rep);
 
         private:
-            /// The directory containing the files to be served.
-            std::string doc_root_;
-
             /// REST endpoints
             std::vector<rest_endpoint_handler*> rest_endpoints;
 

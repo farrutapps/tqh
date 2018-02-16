@@ -5,8 +5,8 @@
 #ifndef SERVER_REST_ENDPOINT_HANDLER_HPP
 #define SERVER_REST_ENDPOINT_HANDLER_HPP
 #include <iostream>
-#include "../request.hpp"
-#include "../reply.hpp"
+#include "request.hpp"
+#include "reply.hpp"
 
 namespace http {
     namespace server {

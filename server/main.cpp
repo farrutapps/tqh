@@ -9,10 +9,12 @@
 //
 
 #include <iostream>
-#include <string>
 #include <boost/asio.hpp>
 #include "connection/server.hpp"
-#include "utils/json.hpp"
+#include <vector>
+#include "controller/user.hpp"
+#include "connection/rest_endpoint_handler.hpp"
+#include "controller/controller.hpp"
 
 using json = nlohmann::json;
 
@@ -32,8 +34,11 @@ int main(int argc, char* argv[])
             return 1;
         }
 
+
+        controller c = controller();
+        std::vector<http::server::rest_endpoint_handler*> h =c.get_endpoint_handlers();
         // Initialise the server.
-        http::server::server s(argv[1], argv[2], argv[3]);
+        http::server::server s(argv[1], argv[2], h );
 
         // Run the server until stopped.
         s.run();
