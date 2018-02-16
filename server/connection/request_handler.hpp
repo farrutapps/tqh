@@ -31,11 +31,8 @@ namespace http {
             /// Construct with a directory containing files to be served.
             explicit request_handler(const std::string& doc_root);
 
-            /// Handle a get request and produce a reply.
-            void handle_get_request(const request &req, reply &rep);
-
             /// Handle a post request and produce a reply.
-            void handle_post_request(const request &req, reply &rep);
+            void handle_request(const request &req, reply &rep);
 
         private:
             /// The directory containing the files to be served.

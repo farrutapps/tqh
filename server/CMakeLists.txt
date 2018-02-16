@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.6)
 project(server)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread")
 find_package(Boost 1.66.0 COMPONENTS system filesystem REQUIRED)
 
 if(Boost_FOUND)
@@ -33,7 +34,7 @@ add_executable(server
         connection/rest_endpoints/rest_endpoint_handler.hpp
         connection/rest_endpoints/data_update_handler.cpp
         connection/rest_endpoints/data_update_handler.hpp
-        )
+        connection/rest_endpoints/publish_info.cpp connection/rest_endpoints/publish_info.hpp)
 
 
 if(Boost_FOUND)
