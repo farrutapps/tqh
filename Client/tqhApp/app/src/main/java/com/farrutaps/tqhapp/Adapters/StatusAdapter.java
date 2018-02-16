@@ -47,24 +47,28 @@ public class StatusAdapter extends BaseAdapter {
         return options.get(position).ordinal();
     }
 
+    public String getItemName(int position) {
+        return options.get(position).getTitle();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final statusHolder statusHolder;
+        final StatusHolder statusHolder;
 
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.item_status, null);
-            statusHolder = new statusHolder(convertView);
+            statusHolder = new StatusHolder(convertView);
             convertView.setTag(statusHolder);
         } else
-            statusHolder = (statusHolder) convertView.getTag();
+            statusHolder = (StatusHolder) convertView.getTag();
 
         // Set item data
-        statusHolder.tvStatus.setText(options.get(position).getTitle());
+        statusHolder.tvStatus.setText(getItemName(position));
 
         boolean wzOn, fkOn;
-        wzOn = userWZ.getStatus().getOnFromOption(options.get(position));
-        fkOn = userFK.getStatus().getOnFromOption(options.get(position));
+        wzOn = userWZ.getStatus().getOnFromOption(getItem(position));
+        fkOn = userFK.getStatus().getOnFromOption(getItem(position));
         setLedColor(statusHolder.ledWZ, wzOn, convertView);
         setLedColor(statusHolder.ledFK, fkOn, convertView);
 
@@ -83,13 +87,13 @@ public class StatusAdapter extends BaseAdapter {
     }
 }
 
-class statusHolder {
+class StatusHolder {
 
     public ImageView ledWZ;
     public ImageView ledFK;
     public TextView tvStatus;
 
-    public statusHolder(View base) {
+    public StatusHolder(View base) {
         this.ledWZ = (ImageView) base.findViewById(R.id.led_wz);
         this.ledFK = (ImageView) base.findViewById(R.id.led_fk);
         this.tvStatus = (TextView) base.findViewById(R.id.tv_status_item);

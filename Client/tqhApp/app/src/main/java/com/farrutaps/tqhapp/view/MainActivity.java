@@ -16,9 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.controller.Controller;
@@ -42,10 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
     /* Main Fragment Resources */
     private static ListView lvStatus;
-    private static StatusAdapter lvAdapter;
+    private static StatusAdapter lvStatusAdapter;
     private static ImageView ledWZ1, ledWZ2, ledWZ4, ledWZ8, ledFK1, ledFK2, ledFK4, ledFK8;
 
     /* User Fragment Resources */
+    private static ListView lvMyStatus;
+    private static MyStatusAdapter lvMyStatusAdapter;
+    private static ImageButton ibPublish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         new Controller();
+        // TODO delete test
+        try {
+            Controller.setMaster(Controller.getUsers().get(0));
+        } catch(Exception e) {}
 
         this.initResources();
         this.setResources();
@@ -88,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 // TODO
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
-                test(view);
             }
         });
     }
@@ -98,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         Random r = new Random();
         Controller.getUsers().get(0).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
         Controller.getUsers().get(1).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
-        lvAdapter.notifyDataSetChanged();
+        lvStatusAdapter.notifyDataSetChanged();
 
         Controller.getUsers().get(0).setBackHome(r.nextInt(12));
         Controller.getUsers().get(1).setBackHome(r.nextInt(12));
@@ -199,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         private void setMainResources(View rootView) {
             /* ListView */
             try {
-                lvAdapter = new StatusAdapter(rootView.getContext(), Options.values(), Controller.getUsers());
-                lvStatus.setAdapter(lvAdapter);
+                lvStatusAdapter = new StatusAdapter(rootView.getContext(), Options.values(), Controller.getUsers());
+                lvStatus.setAdapter(lvStatusAdapter);
             } catch (Exception e) {}
 
             /* LEDs */
@@ -243,11 +250,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void initUserResources(View rootView) {
-            // TODO
+            lvMyStatus = (ListView) rootView.findViewById(R.id.lv_my_status);
+            ibPublish = (ImageButton) rootView.findViewById(R.id.ib_publish);
         }
 
         private void setUserResources(View rootView) {
-            // TODO
+            /* ListView */
+            try {
+                lvMyStatusAdapter = new MyStatusAdapter(rootView.getContext(), Options.values(), Controller.getMaster());
+                lvMyStatus.setAdapter(lvMyStatusAdapter);
+            } catch (Exception e) {}
+
+            ibPublish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
         }
     }
 

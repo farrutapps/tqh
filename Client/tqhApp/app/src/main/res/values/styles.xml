@@ -17,4 +17,42 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <!-- My Styles -->
+
+    <style name="activity_layout">
+        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="title">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginBottom">@dimen/layout_padding_v</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="led">
+        <item name="android:layout_width">@dimen/led_diam</item>
+        <item name="android:height">@dimen/led_diam</item>
+        <item name="android:layout_marginRight">@dimen/led_dist</item>
+        <item name="android:background">@drawable/led_off</item>
+    </style>
+
+    <style name="lv_item_layout">
+        <item name="android:paddingTop">@dimen/layout_padding_v</item>
+        <item name="android:paddingBottom">@dimen/layout_padding_v</item>
+        <item name="android:paddingLeft">@dimen/layout_padding_h</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="lv_item_text">
+        <item name="android:textSize">13dp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+
 </resources>

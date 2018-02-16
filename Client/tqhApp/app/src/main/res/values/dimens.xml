@@ -5,6 +5,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
 
+    <dimen name="layout_padding_h">8dp</dimen>
+    <dimen name="layout_padding_v">2dp</dimen>
     <dimen name="led_diam">12dp</dimen>
     <dimen name="led_dist">4dp</dimen>
+
 </resources>

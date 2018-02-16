@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/lv_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/appbar_padding_top"
-    android:paddingTop="@dimen/appbar_padding_top"
-    android:paddingBottom="@dimen/appbar_padding_top"
-    android:gravity="center_vertical">
+    android:paddingBottom="@dimen/layout_padding_h"
+    android:paddingTop="@dimen/layout_padding_h">
 
     <ImageView
         android:id="@+id/led_wz"
+        style="@style/led"
         android:layout_width="@dimen/led_diam"
-        android:layout_height="@dimen/led_diam"
-        android:layout_marginRight="@dimen/led_dist"
-        android:background="@drawable/led_off" />
+        android:layout_height="@dimen/led_diam" />
 
     <ImageView
         android:id="@+id/led_fk"
+        style="@style/led"
         android:layout_width="@dimen/led_diam"
-        android:layout_height="@dimen/led_diam"
-        android:layout_marginRight="@dimen/led_dist"
-        android:background="@drawable/led_off" />
+        android:layout_height="@dimen/led_diam" />
 
     <TextView
         android:id="@+id/tv_status_item"
+        style="@style/lv_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/appbar_padding_top"
-        android:textStyle="bold"
-        android:textSize="14dp"
-        android:text="Hambre"/>
-
+        android:text="Hambre" />
 
 </LinearLayout>

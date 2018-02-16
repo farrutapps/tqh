@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/appbar_padding_top">
+    style="@style/lv_item_layout">
 
     <CheckedTextView
         android:id="@+id/ctv_my_status_item"
@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        style="@style/lv_item_text"
         android:text="Hambre"/>
 
 </LinearLayout>

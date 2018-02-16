@@ -1,32 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context=".view.MainActivity$PlaceholderFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="3">
 
         <LinearLayout
-            android:background="@drawable/bg_layout"
-            android:layout_marginRight="@dimen/appbar_padding_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_marginRight="@dimen/layout_padding_h"
+            android:layout_weight="1"
+            android:background="@drawable/bg_layout"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="@dimen/appbar_padding_top">
+                android:layout_margin="@dimen/layout_padding_h"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -50,17 +48,16 @@
         </LinearLayout>
 
         <LinearLayout
-            android:background="@drawable/bg_layout"
-            android:layout_marginLeft="@dimen/appbar_padding_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:background="@drawable/bg_layout"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/appbar_padding_top">
+                android:layout_margin="@dimen/layout_padding_h">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -77,14 +74,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="@dimen/appbar_padding_top">
+                android:layout_margin="@dimen/layout_padding_h"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:layout_marginBottom="@dimen/layout_padding_v"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -94,38 +92,35 @@
 
                     <ImageView
                         android:id="@+id/led_wz_8"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_wz_4"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_wz_2"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_wz_1"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center">
+                    android:layout_marginTop="@dimen/layout_padding_v"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -135,34 +130,30 @@
 
                     <ImageView
                         android:id="@+id/led_fk_8"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_fk_4"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_fk_2"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
 
                     <ImageView
                         android:id="@+id/led_fk_1"
+                        style="@style/led"
                         android:layout_width="@dimen/led_diam"
-                        android:layout_height="@dimen/led_diam"
-                        android:layout_marginRight="@dimen/led_dist"
-                        android:background="@drawable/led_off" />
+                        android:layout_height="@dimen/led_diam" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
