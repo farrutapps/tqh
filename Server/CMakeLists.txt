@@ -35,10 +35,7 @@ add_executable(server
         controller/rest_endpoints/data_update_handler.cpp
         controller/rest_endpoints/data_update_handler.hpp
         controller/rest_endpoints/publish_info.cpp
-        controller/rest_endpoints/publish_info.hpp
-        controller/controller.cpp
-        controller/controller.hpp
-        controller/user.hpp)
+        controller/rest_endpoints/publish_info.hpp controller/controller.cpp controller/controller.hpp controller/user.hpp)
 
 
 if(Boost_FOUND)
