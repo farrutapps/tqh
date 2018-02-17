@@ -1,12 +1,8 @@
 package com.farrutaps.tqhapp.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.ActionBar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
@@ -47,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
     private TabLayout tabLayout;
     private int[] tabLayoutIcons = {R.drawable.ic_people, R.drawable.ic_person};
     private FloatingActionButton fab;
+    private TextView username;
 
     /* Main Fragment Resources */
     private static ListView lvStatus;
@@ -71,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
 
         this.initResources();
         this.setResources();
+
     }
 
     private void initResources() {
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         mViewPager = (ViewPager) findViewById(R.id.container);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        username = (TextView) findViewById(R.id.action_username);
     }
 
     private void setResources () {
@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
                 showNumberPicker(view);
             }
         });
+
+        /* TextView */
+        try {
+            username.setText(Controller.getMaster().getUsername());
+        } catch (Exception e) {}
     }
 
     private void test(View view) {
@@ -268,13 +273,16 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             ibPublish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+
+                    lvStatusAdapter.notifyDataSetChanged();
+
+                    // TODO sent info to Esteful
+                    String msg = getResources().getString(R.string.save_my_status);
+                    Toast.makeText(view.getContext(), msg, Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -311,9 +319,9 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         if(numberPicker.getValue() == 0)
             msg = getResources().getString(R.string.back_home_dk);
         else
-            msg = getResources().getString(R.string.back_home) + numberPicker.getValue();
+            msg = getResources().getString(R.string.back_home, numberPicker.getValue());
 
-        Toast.makeText(this,msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     public void showNumberPicker(View view){

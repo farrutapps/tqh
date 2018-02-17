@@ -23,6 +23,25 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
+                <LinearLayout
+                    android:layout_gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/layout_padding_h"
+                        android:src="@drawable/ic_account_circle" />
+
+                    <TextView
+                        android:id="@+id/action_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_username" />
+                </LinearLayout>
+
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
@@ -44,6 +63,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_home"/>
+        android:src="@drawable/ic_home" />
 
 </android.support.design.widget.CoordinatorLayout>

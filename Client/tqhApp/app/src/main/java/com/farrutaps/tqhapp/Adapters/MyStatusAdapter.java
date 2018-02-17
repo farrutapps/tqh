@@ -56,7 +56,7 @@ public class MyStatusAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         final MyStatusHolder myStatusHolder;
 
@@ -74,7 +74,11 @@ public class MyStatusAdapter extends BaseAdapter {
         myStatusHolder.ctvMyStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // change chek in view
                 myStatusHolder.ctvMyStatus.setChecked(!myStatusHolder.ctvMyStatus.isChecked());
+
+                // save data in map
+                master.getStatus().setOnToOption(getItem(position),!master.getStatus().getOnFromOption(getItem(position)));
             }
         });
 
