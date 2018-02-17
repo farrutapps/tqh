@@ -7,25 +7,41 @@
 
 using json = nlohmann::json;
 
-data_update_handler::data_update_handler(std::vector<user> &users) : users_(users){
-    uri_ = "/update";
-    method_= method::POST;
-}
+namespace controller {
+    data_update_handler::data_update_handler(controller *c) : c(c){
+        uri_ = "/update";
+        method_= method::POST;
+    }
 
-http::server::reply data_update_handler::perform_action(const http::server::request &req) {
-    users_.
+    http::server::reply data_update_handler::perform_action(const http::server::request &req) {
+        std::vector<user> users = c->get_users();
+        try {
+            json j = json::parse(req.data);
+            for (auto& element : j) {
+                user user_i = element;
 
-    try {
-        json j = json::parse(req.data);
-        for (auto& element : j) {
+                // check whether updated values make sense
+                if (user_i.user_id >= users.size() || user_i.time > 12 || user_i.time < 0)  {
+                    return http::server::reply::stock_reply(http::server::reply::forbidden);
+                }
 
-            std::cout << element << '\n';
+                users[user_i.user_id] = user_i;
+            }
+            c->set_users(users);
         }
-    }
-    catch (json::exception e) {
-        std::cerr << e.what() << std::endl;
-        return http::server::reply::stock_reply(http::server::reply::json_parse_error);
-    }
+        catch (json::exception e) {
+            std::cerr << e.what() << std::endl;
+            return http::server::reply::stock_reply(http::server::reply::json_parse_error);
+        }
 
-    return http::server::reply::stock_reply(http::server::reply::accepted);
-}
+        // TODO remove debug output
+        for (int i=0; i<users.size(); ++i) {
+            std::cout << "user:" << std::endl;
+            std::cout << users[i].user_id << std::endl;
+            std::cout << users[i].time << std::endl;
+        }
+
+        return http::server::reply::stock_reply(http::server::reply::accepted);
+    }
+} // namespace controller
+
