@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(server)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lpthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -lpthread")
 find_package(Boost 1.66.0 COMPONENTS system filesystem REQUIRED)
 
 if(Boost_FOUND)

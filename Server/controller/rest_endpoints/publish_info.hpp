@@ -11,7 +11,7 @@
 
 namespace controller {
     class publish_info : public http::server::rest_endpoint_handler {
-        controller *c;
+        controller *cont;
     public:
         explicit publish_info(controller *c);
         http::server::reply perform_action(const http::server::request &req) override;

@@ -7381,7 +7381,7 @@ boundaries compute_boundaries(FloatType value)
 }
 
 // Given normalized diyfp w, Grisu needs to find a (normalized) cached
-// power-of-ten c, such that the exponent of the product c * w = f * 2^e lies
+// power-of-ten cont, such that the exponent of the product cont * w = f * 2^e lies
 // within a certain range [alpha, gamma] (Definition 3.2 from [1])
 //
 //      alpha <= e = e_c + e_w + q <= gamma
@@ -7391,19 +7391,19 @@ boundaries compute_boundaries(FloatType value)
 //      f_c * f_w * 2^alpha <= f_c 2^(e_c) * f_w 2^(e_w) * 2^q
 //                          <= f_c * f_w * 2^gamma
 //
-// Since c and w are normalized, i.e. 2^(q-1) <= f < 2^q, this implies
+// Since cont and w are normalized, i.e. 2^(q-1) <= f < 2^q, this implies
 //
-//      2^(q-1) * 2^(q-1) * 2^alpha <= c * w * 2^q < 2^q * 2^q * 2^gamma
+//      2^(q-1) * 2^(q-1) * 2^alpha <= cont * w * 2^q < 2^q * 2^q * 2^gamma
 //
 // or
 //
-//      2^(q - 2 + alpha) <= c * w < 2^(q + gamma)
+//      2^(q - 2 + alpha) <= cont * w < 2^(q + gamma)
 //
 // The choice of (alpha,gamma) determines the size of the table and the form of
 // the digit generation procedure. Using (alpha,gamma)=(-60,-32) works out well
 // in practice:
 //
-// The idea is to cut the number c * w = f * 2^e into two parts, which can be
+// The idea is to cut the number cont * w = f * 2^e into two parts, which can be
 // processed independently: An integral part p1, and a fractional part p2:
 //
 //      f * 2^e = ( (f div 2^-e) * 2^-e + (f mod 2^-e) ) * 2^e
@@ -7438,7 +7438,7 @@ boundaries compute_boundaries(FloatType value)
 constexpr int kAlpha = -60;
 constexpr int kGamma = -32;
 
-struct cached_power // c = f * 2^e ~= 10^k
+struct cached_power // cont = f * 2^e ~= 10^k
 {
     uint64_t f;
     int e;
@@ -7457,20 +7457,20 @@ inline cached_power get_cached_power_for_binary_exponent(int e)
     // Now
     //
     //      alpha <= e_c + e + q <= gamma                                    (1)
-    //      ==> f_c * 2^alpha <= c * 2^e * 2^q
+    //      ==> f_c * 2^alpha <= cont * 2^e * 2^q
     //
-    // and since the c's are normalized, 2^(q-1) <= f_c,
+    // and since the cont's are normalized, 2^(q-1) <= f_c,
     //
-    //      ==> 2^(q - 1 + alpha) <= c * 2^(e + q)
-    //      ==> 2^(alpha - e - 1) <= c
+    //      ==> 2^(q - 1 + alpha) <= cont * 2^(e + q)
+    //      ==> 2^(alpha - e - 1) <= cont
     //
-    // If c were an exakt power of ten, i.e. c = 10^k, one may determine k as
+    // If cont were an exakt power of ten, i.e. cont = 10^k, one may determine k as
     //
     //      k = ceil( log_10( 2^(alpha - e - 1) ) )
     //        = ceil( (alpha - e - 1) * log_10(2) )
     //
     // From the paper:
-    // "In theory the result of the procedure could be wrong since c is rounded,
+    // "In theory the result of the procedure could be wrong since cont is rounded,
     //  and the computation itself is approximated [...]. In practice, however,
     //  this simple function is sufficient."
     //
@@ -7502,7 +7502,7 @@ inline cached_power get_cached_power_for_binary_exponent(int e)
     // (A smaller distance gamma-alpha would require a larger table.)
 
     // NB:
-    // Actually this function returns c, such that -60 <= e_c + e + 64 <= -34.
+    // Actually this function returns cont, such that -60 <= e_c + e + 64 <= -34.
 
     constexpr int kCachedPowersSize = 79;
     constexpr int kCachedPowersMinDecExp = -300;
@@ -7970,7 +7970,7 @@ inline void grisu2(char* buf, int& len, int& decimal_exponent,
 
     const cached_power cached = get_cached_power_for_binary_exponent(m_plus.e);
 
-    const diyfp c_minus_k(cached.f, cached.e); // = c ~= 10^-k
+    const diyfp c_minus_k(cached.f, cached.e); // = cont ~= 10^-k
 
     // The exponent of the products is = v.e + c_minus_k.e + q and is in the range [alpha,gamma]
     const diyfp w       = diyfp::mul(v,       c_minus_k);
@@ -7979,7 +7979,7 @@ inline void grisu2(char* buf, int& len, int& decimal_exponent,
 
     //  ----(---+---)---------------(---+---)---------------(---+---)----
     //          w-                      w                       w+
-    //          = c*m-                  = c*v                   = c*m+
+    //          = cont*m-                  = cont*v                   = cont*m+
     //
     // diyfp::mul rounds its result and c_minus_k is approximated too. w, w- and
     // w+ are now off by a small amount.
@@ -9951,9 +9951,9 @@ class basic_json
 #endif
 
 #ifdef __cplusplus
-        result["compiler"]["c++"] = std::to_string(__cplusplus);
+        result["compiler"]["cont++"] = std::to_string(__cplusplus);
 #else
-        result["compiler"]["c++"] = "unknown";
+        result["compiler"]["cont++"] = "unknown";
 #endif
         return result;
     }

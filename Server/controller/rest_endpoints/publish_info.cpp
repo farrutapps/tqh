@@ -5,7 +5,7 @@
 #include "../../connection/reply.hpp"
 #include "publish_info.hpp"
 namespace controller {
-    publish_info::publish_info(controller *c) : c(c) {
+    publish_info::publish_info(controller *c) : cont(c) {
         uri_="/status";
         method_=GET;
     }
@@ -13,7 +13,7 @@ namespace controller {
     http::server::reply publish_info::perform_action(const http::server::request &req) {
         json data;
         try {
-            data = c->get_users();
+            data = cont->get_users();
         }
         catch (json::exception e) {
             std::cerr << e.what() << std::endl;
