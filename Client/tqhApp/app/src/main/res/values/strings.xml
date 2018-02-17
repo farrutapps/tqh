@@ -7,6 +7,7 @@
     <string name="wz">WZ</string>
     <string name="fk">FK</string>
     <string name="my_status">My status</string>
-    <string name="esteful">Esteful</string>
-   
-</resources>
+    <string name="back_home">I\'ll be back home at ~</string>
+    <string name="back_home_dk">Idk when I\'ll be back home.</string>
+
+    </resources>

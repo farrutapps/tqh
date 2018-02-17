@@ -1,8 +1,12 @@
 package com.farrutaps.tqhapp.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
@@ -30,7 +36,7 @@ import com.farrutaps.tqhapp.model.User;
 import java.util.Random;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
 
     private static final int NUM_TABS = 2;
 
@@ -94,9 +100,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showNumberPicker(view);
             }
         });
     }
@@ -299,5 +303,22 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return null;
         }
+    }
+
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+        String msg;
+        if(numberPicker.getValue() == 0)
+            msg = getResources().getString(R.string.back_home_dk);
+        else
+            msg = getResources().getString(R.string.back_home) + numberPicker.getValue();
+
+        Toast.makeText(this,msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void showNumberPicker(View view){
+        NumberPickerDialog newFragment = new NumberPickerDialog();
+        newFragment.setValueChangeListener(this);
+        newFragment.show(getSupportFragmentManager(), "time picker");
     }
 }
