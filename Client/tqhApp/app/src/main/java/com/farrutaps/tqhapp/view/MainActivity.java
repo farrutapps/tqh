@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
+import com.farrutaps.tqhapp.client.Connection;
 import com.farrutaps.tqhapp.controller.Controller;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
@@ -101,6 +102,15 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             @Override
             public void onClick(View view) {
                 showNumberPicker(view);
+
+                // TODO change
+                /*String result = "CACA";
+                try {
+                    result = Connection.exampleGET();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(view.getContext(),result,Toast.LENGTH_LONG).show();*/
             }
         });
 
