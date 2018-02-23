@@ -1,6 +1,6 @@
 package com.farrutaps.tqhapp.view;
 
-import android.app.ActionBar;
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -26,10 +26,13 @@ import android.widget.Toast;
 import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
-import com.farrutaps.tqhapp.client.Connection;
+import com.farrutaps.tqhapp.client.AsyncConnection;
+import com.farrutaps.tqhapp.client.WebServices;
 import com.farrutaps.tqhapp.controller.Controller;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
+
+import org.json.JSONException;
 
 import java.util.Random;
 
@@ -57,10 +60,13 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
     private static MyStatusAdapter lvMyStatusAdapter;
     private static ImageButton ibPublish;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.mContext = this;
 
         new Controller();
         // TODO delete test
@@ -101,16 +107,10 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNumberPicker(view);
+                //showNumberPicker(view);
 
                 // TODO change
-                /*String result = "CACA";
-                try {
-                    result = Connection.exampleGET();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Toast.makeText(view.getContext(),result,Toast.LENGTH_LONG).show();*/
+                runConnectionThread();
             }
         });
 
@@ -339,4 +339,23 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         newFragment.setValueChangeListener(this);
         newFragment.show(getSupportFragmentManager(), "time picker");
     }
+
+    private void runConnectionThread() {
+        new Thread() {
+            public void run() {
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                AsyncConnection asyncConnection = new AsyncConnection(mContext);
+                                asyncConnection.execute();
+                            } catch (Exception e) {}
+                        }
+                    });
+                } catch (Exception e) {}
+            }
+        }.start();
+    }
+
 }
