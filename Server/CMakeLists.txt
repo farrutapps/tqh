@@ -40,7 +40,7 @@ add_executable(Server
         controller/controller.hpp
         controller/user.hpp
         esteful/Gpio.cpp
-        esteful/Gpio.hpp)
+        esteful/Gpio.hpp esteful/Led.cpp esteful/Led.hpp)
 
 
 if(Boost_FOUND)

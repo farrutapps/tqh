@@ -5,7 +5,13 @@
 #include "Gpio.hpp"
 #include <fstream>
 
+Gpio::Gpio() {}
+
 Gpio::Gpio(int pin_num) {
+    init_vars(pin_num);
+}
+
+void Gpio::init_vars(int pin_num) {
     pin_number = pin_num;
 
     pin_name = "gpio";
@@ -43,6 +49,10 @@ std::string Gpio::read_from_file(std::string filename) {
         std::cerr << msg << std::endl;
     }
     return output;
+}
+
+void Gpio::set_pin(int pin_num) {
+    init_vars(pin_num);
 }
 
 void Gpio::export_pin() {
