@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(server)
+project(Server)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -lpthread")
@@ -12,7 +12,7 @@ if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-add_executable(server
+add_executable(Server
         main.cpp
         utils/json.hpp
         connection/reply.cpp
@@ -42,7 +42,7 @@ add_executable(server
 
 
 if(Boost_FOUND)
-    target_link_libraries(server ${Boost_LIBRARIES})
+    target_link_libraries(Server ${Boost_LIBRARIES})
 endif()
 
-target_link_libraries(server ${Boost_LIBRARIES})
+target_link_libraries(Server ${Boost_LIBRARIES})
