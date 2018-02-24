@@ -1,19 +1,19 @@
 package com.farrutaps.tqhapp.client;
 
-import android.content.Context;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Sònia Batllori on 23/02/2018.
@@ -21,154 +21,111 @@ import java.util.List;
 public class WebServices {
 
     private static final int CONNECTION_TIMEOUT = 5000;
-    private static final String URL_TEST = "https://www.android.com";
-    private static final String URL_GET = "http://http://10.0.0.23:6969/status";
-    private static final String URL_POST = "http://http://10.0.0.23:6969/update";
+    private static final String URI = "http://192.168.0.206:6969";//"http://192.168.0.59:6969";
 
-    public static String getStatus() {
-        String result = "Error";
+    public enum Request {
+        GET(URI + "/status"),
+        POST(URI + "/update");
 
-        int responseCode = -1;
-        String responseBody = "Error";
-        try {
+        private String url;
+        Request(String url) {
+            this.url = url;
+        }
+    }
 
-            // Send a GET Request to the URL_GET URL
-            URL url = new URL(URL_TEST);
-            HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-            urlc.setConnectTimeout(CONNECTION_TIMEOUT);
-            urlc.setRequestMethod("GET");
-            urlc.connect();
-            responseCode = urlc.getResponseCode();
-            if (urlc.getResponseCode() == 200) {
-                urlc.disconnect();
-            }
+    private static HttpURLConnection createHttpURLConnection(Request request) throws Exception {
+        // Get the request URL
+        URL url = new URL(request.url);
 
-            // Read the Response
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null)
-                response.append(inputLine);
-            in.close();
-            responseBody = response.toString();
-            // TODO readGETResponse(responseBody);
+        // Define a connection adding the common parameters
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(CONNECTION_TIMEOUT);
+        conn.setRequestMethod(request.name());
 
-        } catch (Exception e) {}
+        return conn;
+    }
 
-        result = "HTTP Response Code: "
-                + responseCode + " " + HTTP_1_0_Response.getResponseFromCode(responseCode).getResponseMessage()
-                + "\nHTTP Response Body: " + responseBody;
+    private static String sendGet(HttpURLConnection conn) throws Exception {
 
+        // Establish the connection with the server
+        conn.connect();
+
+        // Get the response
+        return getResponse(conn, HttpURLConnection.HTTP_OK);
+    }
+
+    private static String sendPost(HttpURLConnection conn) throws Exception {
+
+        // Add POST parameters
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+
+        // Write POST data to the request
+        write(conn,getJSONtest());
+
+        // Establish the connection with the server
+        conn.connect();
+
+        // Get the response
+        return getResponse(conn, HttpURLConnection.HTTP_ACCEPTED);
+    }
+
+    private static String read(HttpURLConnection conn) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine = reader.readLine();
+        reader.close();
+        return inputLine;
+    }
+
+    private static void write(HttpURLConnection conn, String data) throws Exception {
+        OutputStream os = conn.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(data);
+        writer.flush();
+        writer.close();
+        os.close();
+    }
+
+    private static String getResponse(HttpURLConnection conn, int expectedResponseCode) throws Exception {
+
+        int responseCode = conn.getResponseCode();
+
+        String result;
+        result = "HTTP ResponseCode: " + responseCode + " " + conn.getResponseMessage();
+
+        if(responseCode == expectedResponseCode) {
+            result += "\n" + read(conn);
+            conn.disconnect();
+        }
         return result;
     }
 
-    /*
-        [
-            {
-                "user_id": 0,
-                "led_states": [false, true, false, true, ...],
-                "time":7
-            },
-            {
-                "user_id": 1,
-                "led_states": [false, true, false, true, ...],
-                "time":8
-            }
-        ]
+    public static String sendRequest(Request request) {
+        String response = "Error";
+        try {
+            HttpURLConnection conn = createHttpURLConnection(request);
+            response = (request == Request.GET) ? sendGet(conn) : sendPost(conn);
+        } catch (Exception e) {}
 
-     */
-    public static String readGETResponse(String in) throws JSONException {
-        String test = "";
-        in = "[{\"user_id\": 0, \"led_states\": [0, 1, 0, 0, 0, 0, 0, 1, 0],\"time\":7},{\"user_id\": 1, \"led_states\": [1, 1, 1, 0, 0, 0, 0, 0, 0], \"time\":8}]\n";
-        JSONArray statusJSCONArray = new JSONArray(in);
-        for (int i = 0; i < statusJSCONArray.length(); i++)
-        {
-            JSONObject status = statusJSCONArray.getJSONObject(i);
-            int userId = status.getInt("user_id");
-            JSONArray ledStatesJSONArray = status.getJSONArray("led_states");
-            int time = status.getInt("time");
-            test += userId + " " + time + " " + ledStatesJSONArray + "\n";
-        }
-        return test;
+        return response;
+    }
+
+    public static String getJSONtest() throws JSONException {
+        JSONObject data = new JSONObject();
+
+        data.put("user_id", 0);
+        data.put("time", 8);
+
+        JSONArray led_states = new JSONArray();
+        for(int i = 0; i < 8; i++)
+            led_states.put(i, true);
+        data.put("led_states", led_states);
+
+        JSONArray dataArray = new JSONArray();
+        dataArray.put(0,data);
+
+        return dataArray.toString();
+
     }
 }
-
-/*
-    private static final String USER_AGENT = "Mozilla/5.0";
-
-    // HTTP GET request
-    public static String sendGet(View view) throws Exception {
-
-        String url = "https://www.android.com";
-
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        con.setRequestProperty("User-Agent", USER_AGENT);
-
-        con.setConnectTimeout(5000);
-        con.connect();
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
-        return response.toString();
-    }
-
-    // HTTP POST request
-    public static void sendPost() throws Exception {
-
-        String url = "https://selfsolve.apple.com/wcResults.do";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        //add request header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-        String urlParameters = "sn=C02G8416DRJM&cn=&locale=&caller=&num=12345";
-
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
-
-    }
-}*/

@@ -33,25 +33,9 @@ public class AsyncConnection extends AsyncTask<Void,Void,String>
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnected()) {
-            return WebServices.getStatus();
+            return WebServices.sendRequest(WebServices.Request.POST);
         }
         return null;
-            /*try {
-                URL url = new URL("https://www.android.com");
-                HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-                urlc.setConnectTimeout(5000);
-                urlc.connect();
-                if (urlc.getResponseCode() == 200) {
-                    urlc.disconnect();
-                    return true;
-                }
-            } catch (MalformedURLException e1) {
-                e1.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;*/
     }
 }
 
