@@ -1,18 +1,11 @@
 package com.farrutaps.tqhapp.client;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -21,7 +14,7 @@ import java.net.URL;
 public class WebServices {
 
     private static final int CONNECTION_TIMEOUT = 5000;
-    private static final String URI = "http://192.168.0.206:6969";//"http://192.168.0.59:6969";
+    private static final String URI = "http://192.168.0.59:6969";
 
     public enum Request {
         GET(URI + "/status"),
@@ -54,7 +47,7 @@ public class WebServices {
         return getResponse(conn, HttpURLConnection.HTTP_OK);
     }
 
-    private static String sendPost(HttpURLConnection conn) throws Exception {
+    private static String sendPost(HttpURLConnection conn, String data) throws Exception {
 
         // Add POST parameters
         conn.setDoOutput(true);
@@ -62,7 +55,7 @@ public class WebServices {
         conn.setRequestProperty("Content-Type", "application/json");
 
         // Write POST data to the request
-        write(conn,getJSONtest());
+        write(conn,data);
 
         // Establish the connection with the server
         conn.connect();
@@ -101,31 +94,13 @@ public class WebServices {
         return result;
     }
 
-    public static String sendRequest(Request request) {
+    public static String sendRequest(Request request, String data) {
         String response = "Error";
         try {
             HttpURLConnection conn = createHttpURLConnection(request);
-            response = (request == Request.GET) ? sendGet(conn) : sendPost(conn);
+            response = (request == Request.GET) ? sendGet(conn) : sendPost(conn, data);
         } catch (Exception e) {}
 
         return response;
-    }
-
-    public static String getJSONtest() throws JSONException {
-        JSONObject data = new JSONObject();
-
-        data.put("user_id", 0);
-        data.put("time", 8);
-
-        JSONArray led_states = new JSONArray();
-        for(int i = 0; i < 8; i++)
-            led_states.put(i, true);
-        data.put("led_states", led_states);
-
-        JSONArray dataArray = new JSONArray();
-        dataArray.put(0,data);
-
-        return dataArray.toString();
-
     }
 }

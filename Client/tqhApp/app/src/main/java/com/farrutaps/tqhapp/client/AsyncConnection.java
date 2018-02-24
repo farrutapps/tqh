@@ -6,14 +6,15 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.farrutaps.tqhapp.R;
+
 /**
  * Created by Sònia Batllori on 23/02/2018.
  */
-public class AsyncConnection extends AsyncTask<Void,Void,String>
-{
+public class AsyncConnection extends AsyncTask<String, Void, String> {
     private Context mContext;
 
-    public AsyncConnection(Context mContext){
+    public AsyncConnection(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -29,11 +30,20 @@ public class AsyncConnection extends AsyncTask<Void,Void,String>
     }
 
     @Override
-    protected String doInBackground(Void ... params) {
+    protected String doInBackground(String... params) {
         ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnected()) {
-            return WebServices.sendRequest(WebServices.Request.POST);
+            WebServices.Request request;
+            String data = null;
+            try {
+                data = params[0];
+                request = WebServices.Request.POST;
+            } catch (Exception e)
+            {
+                request = WebServices.Request.GET;
+            }
+            return WebServices.sendRequest(request, data);
         }
         return null;
     }
