@@ -38,7 +38,9 @@ add_executable(Server
         controller/rest_endpoints/publish_info.hpp
         controller/controller.cpp
         controller/controller.hpp
-        controller/user.hpp)
+        controller/user.hpp
+        esteful/Gpio.cpp
+        esteful/Gpio.hpp)
 
 
 if(Boost_FOUND)

@@ -15,10 +15,27 @@
 #include "controller/user.hpp"
 #include "connection/rest_endpoint_handler.hpp"
 #include "controller/controller.hpp"
+#include "esteful/Gpio.hpp"
+
+#include <unistd.h>
 
 using json = nlohmann::json;
     int main(int argc, char* argv[])
     {
+        Gpio g(4);
+        g.export_pin();
+        g.set_direction(true);
+        g.set_value(true);
+
+        unsigned int frequency = 2;
+        unsigned int sleep = 1.0/frequency* 1000000.0/2.0;
+        std::cout << sleep << std::endl;
+        for (int i=0; i<20; ++i) {
+            g.set_value(true);
+            usleep(sleep);
+            g.set_value(false);
+            usleep(sleep);
+        }
 
         try
         {
