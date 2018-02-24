@@ -12,6 +12,8 @@
 #define HTTP_REQUEST_PARSER_HPP
 
 #include <tuple>
+#include <vector>
+#include "header.hpp"
 
 namespace http {
     namespace server {
@@ -51,6 +53,9 @@ namespace http {
         private:
             /// Handle the next character of input.
             result_type consume(request& req, char input);
+
+            /// Get id of header in vector by its name
+            static int find(const std::vector<header> headers, const std::string value);
 
             /// Check if a byte is an HTTP character.
             static bool is_char(int c);

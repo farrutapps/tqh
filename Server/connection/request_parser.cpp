@@ -26,6 +26,7 @@ namespace http {
 
         request_parser::result_type request_parser::consume(request& req, char input)
         {
+            int content_length_id;
             switch (state_)
             {
                 case method_start:
@@ -285,8 +286,9 @@ namespace http {
                     } else return bad;
 
                 case expecting_data:
-                    if (req.headers[3].name == "Content-Type" && req.headers[3].value == "application/json" && req.headers[4].name == "Content-Length") {
-                        if (data_body_idx < std::stoi(req.headers[4].value)) {
+                    content_length_id = find(req.headers, "Content-Length");
+                    if (content_length_id != -1){
+                        if (data_body_idx < std::stoi(req.headers[content_length_id].value)) {
                             state_ = data_body;
                             req.data.push_back(input);
                             data_body_idx += 1;
@@ -295,7 +297,7 @@ namespace http {
                     } else return bad;
 
                 case data_body: {
-                    const int content_length = std::stoi(req.headers[4].value);
+                    const int content_length = std::stoi(req.headers[content_length_id].value);
                     if (data_body_idx < content_length) {
                         req.data.push_back(input);
                         data_body_idx += 1;
@@ -309,6 +311,14 @@ namespace http {
                 default:
                     return bad;
             }
+        }
+
+        int request_parser::find(const std::vector<header> headers, const std::string value) {
+            for (int i=0; i<headers.size(); ++i) {
+                if (headers[i].name == value)
+                    return i;
+            }
+            return -1;
         }
 
         bool request_parser::is_char(int c)
