@@ -15,7 +15,7 @@ namespace controller {
     /// store the current state of each user
     struct user {
         int user_id;
-        int time;
+        unsigned int time;
         std::vector<bool> led_states;
     };
 
@@ -29,6 +29,14 @@ namespace controller {
         u.user_id = j.at("user_id").get<int>();
         u.time = j.at("time").get<int>();
         u.led_states = j.at("led_states").get< std::vector<bool> >();
+    }
+
+    static int find (std::vector<user> &users, int usr_id) {
+        for (int i=0; i<users.size(); ++i) {
+            if (usr_id == users[i].user_id)
+                return i;
+        }
+        return -1;
     }
 }
 

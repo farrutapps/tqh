@@ -39,8 +39,8 @@ add_executable(Server
         controller/controller.cpp
         controller/controller.hpp
         controller/user.hpp
-        esteful/Gpio.cpp
-        esteful/Gpio.hpp esteful/Led.cpp esteful/Led.hpp)
+        led_board/Gpio.cpp
+        led_board/Gpio.hpp led_board/Led.cpp led_board/Led.hpp led_board/LedController.cpp led_board/LedController.hpp controller/UpdateListener.hpp)
 
 
 if(Boost_FOUND)

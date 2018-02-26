@@ -14,6 +14,7 @@ public:
     ~Led();
     void on();
     void off();
+    void set_state(bool value);
     void opposite();
 };
 

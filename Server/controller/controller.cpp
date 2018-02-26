@@ -9,6 +9,7 @@
 using rest_endpoint_handler = http::server::rest_endpoint_handler;
 
 namespace controller {
+
     controller::controller(int num_users, int num_leds) {
         for (int i=0; i<num_users; ++i) {
             user new_user = {i, 0, std::vector<bool>(num_leds, 0)};
@@ -29,6 +30,16 @@ namespace controller {
 
     void controller::set_users(std::vector<user> users) {
         users_=users;
+    }
+
+    void controller::register_listener(UpdateListener *listener) {
+        update_listeners_.push_back(listener);
+    }
+
+    void controller::notifyUpdate(user user) {
+        for (int i=0; i<update_listeners_.size(); ++i) {
+            update_listeners_[i]->onUpdate(user);
+        }
     }
 } // namespace controller
 

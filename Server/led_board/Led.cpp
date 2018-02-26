@@ -26,6 +26,10 @@ void Led::off() {
     gpio.set_value(false);
 }
 
+void Led::set_state(bool value) {
+    gpio.set_value(value);
+}
+
 void Led::opposite() {
     std::string curr_value_str = gpio.read_value();
     int curr_value = std::atoi(curr_value_str.c_str());
