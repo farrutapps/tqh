@@ -26,15 +26,8 @@ import android.widget.Toast;
 import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
-import com.farrutaps.tqhapp.client.AsyncConnection;
-import com.farrutaps.tqhapp.client.WebServices;
 import com.farrutaps.tqhapp.controller.Controller;
-import com.farrutaps.tqhapp.model.Options;
-import com.farrutaps.tqhapp.model.User;
-
-import org.json.JSONException;
-
-import java.util.Random;
+import com.farrutaps.tqhapp.controller.Parameters;
 
 
 public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -68,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         setContentView(R.layout.activity_main);
         this.mContext = this;
 
-        new Controller();
+        new Controller(this);
         // TODO delete test
         try {
             Controller.setMaster(Controller.getUsers().get(0));
@@ -107,10 +100,8 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //showNumberPicker(view);
+                showNumberPicker(view);
 
-                // TODO change
-                runConnectionThread();
             }
         });
 
@@ -118,17 +109,6 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         try {
             username.setText(Controller.getMaster().getUsername());
         } catch (Exception e) {}
-    }
-
-    private void test(View view) {
-        Random r = new Random();
-        Controller.getUsers().get(0).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
-        Controller.getUsers().get(1).getStatus().setOnToOption(Options.HAMBRE.getRandom(), r.nextBoolean());
-        lvStatusAdapter.notifyDataSetChanged();
-
-        Controller.getUsers().get(0).setBackHome(r.nextInt(12));
-        Controller.getUsers().get(1).setBackHome(r.nextInt(12));
-        PlaceholderFragment.setBackHomeLeds(view);
     }
 
     @Override
@@ -153,18 +133,70 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+        String msg;
+        if(numberPicker.getValue() == 0)
+            msg = getResources().getString(R.string.back_home_dk);
+        else
+            msg = getResources().getString(R.string.back_home, numberPicker.getValue());
+
+        // Save the time value and send it to the server
+        try {
+            Controller.setBackHome(numberPicker.getValue());
+            Controller.sendDataToEsteful();
+            this.refreshBackHomeLeds();
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, getResources().getString(R.string.any_error), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void showNumberPicker(View view){
+        NumberPickerDialog dialog = new NumberPickerDialog();
+        dialog.setValueChangeListener(this);
+        dialog.show(getSupportFragmentManager(), Parameters.TIME_PICKER.name());
+    }
+
+    public void refreshBackHomeLeds() {
+        try {
+            // TODO refresh only master or both?
+            ImageView[] leds;
+            switch(Controller.getMasterId())
+            {
+                case 0:
+                    leds = PlaceholderFragment.getLedsUser0();
+                    break;
+
+                case 1:
+                    leds = PlaceholderFragment.getLedsUser1();
+                    break;
+
+                default:
+                    leds = null;
+                    break;
+            }
+
+            Controller.refreshUserBackHomeLeds(Controller.getMaster(), leds, PlaceholderFragment.getRootView());
+
+        } catch (Exception e) {}
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+
+        private static ImageView[] ledsUser0, ledsUser1;
+        private static View rootView;
+
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
-        }
+        public PlaceholderFragment() {}
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -179,22 +211,20 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             int section = getArguments().getInt(ARG_SECTION_NUMBER);
-            View rootView = null;
 
             switch(section)
             {
                 case 1:
                     rootView = inflater.inflate(R.layout.fragment_main, container, false);
-                    this.setMainFragment(rootView);
+                    this.setMainFragment();
                     break;
 
                 case 2:
                     rootView = inflater.inflate(R.layout.fragment_user, container, false);
-                    this.setUserFragment(rootView);
+                    this.setUserFragment();
                     break;
             }
 
@@ -202,12 +232,12 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         }
 
         /*** MAIN FRAGMENT ***/
-        private void setMainFragment(View rootView) {
-            initMainResources(rootView);
-            setMainResources(rootView);
+        public void setMainFragment() {
+            initMainResources();
+            setMainResources();
         }
 
-        private void initMainResources(View rootView) {
+        public void initMainResources() {
             // ListView with Status Options for both users
             lvStatus = (ListView) rootView.findViewById(R.id.lv_status);
 
@@ -216,37 +246,39 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             ledWZ2 = (ImageView) rootView.findViewById(R.id.led_wz_2);
             ledWZ4 = (ImageView) rootView.findViewById(R.id.led_wz_4);
             ledWZ8 = (ImageView) rootView.findViewById(R.id.led_wz_8);
+            ledsUser0 = new ImageView[] {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
+
             ledFK1 = (ImageView) rootView.findViewById(R.id.led_fk_1);
             ledFK2 = (ImageView) rootView.findViewById(R.id.led_fk_2);
             ledFK4 = (ImageView) rootView.findViewById(R.id.led_fk_4);
             ledFK8 = (ImageView) rootView.findViewById(R.id.led_fk_8);
+            ledsUser1 = new ImageView[] {ledFK8, ledFK4, ledFK2, ledFK1};
         }
 
-        private void setMainResources(View rootView) {
+        public static ImageView[] getLedsUser0() {
+            return ledsUser0;
+        }
+
+        public static ImageView[] getLedsUser1() {
+            return ledsUser1;
+        }
+
+        public static View getRootView() {
+            return rootView;
+        }
+
+        public void setMainResources() {
             /* ListView */
             try {
-                lvStatusAdapter = new StatusAdapter(rootView.getContext(), Options.values(), Controller.getUsers());
+                lvStatusAdapter = new StatusAdapter(rootView.getContext(), Controller.getOptions(), Controller.getUsers());
                 lvStatus.setAdapter(lvStatusAdapter);
             } catch (Exception e) {}
 
             /* LEDs */
-            setBackHomeLeds(rootView);
+            //setBackHomeLeds(rootView);
         }
 
-        public static void setBackHomeLeds(View rootView){
-            ImageView[] ledsWZ = {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
-            try {
-                setUserBackHomeLeds(Controller.getUsers().get(0), ledsWZ, rootView);
-            } catch (Exception e) {}
-
-            ImageView[] ledsFK = {ledFK8, ledFK4, ledFK2, ledFK1};
-            try {
-                setUserBackHomeLeds(Controller.getUsers().get(1), ledsFK, rootView);
-            } catch (Exception e) {}
-        }
-
-        private static void setUserBackHomeLeds(User user, ImageView[] leds, View rootView)
-        {
+        /*private static void setUserBackHomeLeds(User user, ImageView[] leds, View rootView) {
             // Get the decimal hour in binary base with 4 digits
             String binStr = Integer.toBinaryString(user.getBackHome());
             while (binStr.length() < 4) {
@@ -260,34 +292,50 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
                 else
                     leds[i].setBackground(rootView.getResources().getDrawable(R.drawable.led_off));
             }
-        }
+        }*/
+
+        /*public static void setBackHomeLeds(View rootView){
+            ImageView[] ledsWZ = {ledWZ8, ledWZ4, ledWZ2, ledWZ1};
+            try {
+                setUserBackHomeLeds(Controller.getUsers().get(0), ledsWZ, rootView);
+            } catch (Exception e) {}
+
+            ImageView[] ledsFK = {ledFK8, ledFK4, ledFK2, ledFK1};
+            try {
+                setUserBackHomeLeds(Controller.getUsers().get(1), ledsFK, rootView);
+            } catch (Exception e) {}
+        }*/
+
 
         /*** USER FRAGMENT ***/
-        private void setUserFragment(View rootView) {
-            initUserResources(rootView);
-            setUserResources(rootView);
+        private void setUserFragment() {
+            initUserResources();
+            setUserResources();
         }
 
-        private void initUserResources(View rootView) {
+        private void initUserResources() {
             lvMyStatus = (ListView) rootView.findViewById(R.id.lv_my_status);
             ibPublish = (ImageButton) rootView.findViewById(R.id.ib_publish);
         }
 
-        private void setUserResources(View rootView) {
+        private void setUserResources() {
             /* ListView */
             try {
-                lvMyStatusAdapter = new MyStatusAdapter(rootView.getContext(), Options.values(), Controller.getMaster());
+                lvMyStatusAdapter = new MyStatusAdapter(rootView.getContext(), Controller.getOptions(), Controller.getMaster());
                 lvMyStatus.setAdapter(lvMyStatusAdapter);
             } catch (Exception e) {}
 
+            /* ImageButton */
             ibPublish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    lvStatusAdapter.notifyDataSetChanged();
-
-                    // TODO sent info to Esteful
-                    String msg = getResources().getString(R.string.save_my_status);
+                    String msg;
+                    try {
+                        msg = Controller.sendDataToEsteful();
+                        lvStatusAdapter.notifyDataSetChanged();
+                    } catch (Exception e) {
+                        msg = getResources().getString(R.string.any_error);
+                    }
                     Toast.makeText(view.getContext(), msg, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -322,40 +370,4 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             return null;
         }
     }
-
-    @Override
-    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-        String msg;
-        if(numberPicker.getValue() == 0)
-            msg = getResources().getString(R.string.back_home_dk);
-        else
-            msg = getResources().getString(R.string.back_home, numberPicker.getValue());
-
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public void showNumberPicker(View view){
-        NumberPickerDialog newFragment = new NumberPickerDialog();
-        newFragment.setValueChangeListener(this);
-        newFragment.show(getSupportFragmentManager(), "time picker");
-    }
-
-    private void runConnectionThread() {
-        new Thread() {
-            public void run() {
-                try {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                AsyncConnection asyncConnection = new AsyncConnection(mContext);
-                                asyncConnection.execute();
-                            } catch (Exception e) {}
-                        }
-                    });
-                } catch (Exception e) {}
-            }
-        }.start();
-    }
-
 }

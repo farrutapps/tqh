@@ -7,15 +7,15 @@ import java.util.Random;
  */
 public enum Options {
 
-    HAMBRE("Tengo hambre"),
-    SUEÑO("Tengo sueño"),
-    CACA("Tengo caca"),
-    EMPITUFE("Estoy verschlümpft"),
-    NO_CENA("No vengo a cenar"),
-    MASATGE("Vull un ma(ssa)tge"),
-    NO_ESPERAR("No me esperes"),
-    BESPRECHUNG("Besprechung"),
-    LO_DEJAMOS("Lo dejamos");
+    OP_1("Tengo hambre"),
+    OP_2("Tengo sueño"),
+    OP_3("Tengo caca"),
+    OP_4("Estoy verschlümpft"),
+    OP_5("No vengo a cenar"),
+    OP_6("Vull un ma(ssa)tge"),
+    OP_7("No me esperes"),
+    OP_8("Besprechung"),
+    OP_9("Lo dejamos");
 
     private String title;
     Options(String title) {

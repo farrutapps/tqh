@@ -26,7 +26,8 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        //Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, mContext.getString(R.string.received_status),Toast.LENGTH_LONG).show();
     }
 
     @Override
