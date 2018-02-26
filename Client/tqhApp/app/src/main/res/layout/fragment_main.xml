@@ -30,12 +30,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/led_dist"
-                    android:text="@string/wz" />
+                    android:text="@string/u0" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/fk" />
+                    android:text="@string/u1" />
             </LinearLayout>
 
             <ListView
@@ -88,28 +88,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/wz" />
+                        android:text="@string/u0" />
 
                     <ImageView
-                        android:id="@+id/led_wz_8"
+                        android:id="@+id/led_u0_8"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_wz_4"
+                        android:id="@+id/led_u0_4"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_wz_2"
+                        android:id="@+id/led_u0_2"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_wz_1"
+                        android:id="@+id/led_u0_1"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
@@ -126,28 +126,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/fk" />
+                        android:text="@string/u1" />
 
                     <ImageView
-                        android:id="@+id/led_fk_8"
+                        android:id="@+id/led_u1_8"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_fk_4"
+                        android:id="@+id/led_u1_4"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_fk_2"
+                        android:id="@+id/led_u1_2"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
 
                     <ImageView
-                        android:id="@+id/led_fk_1"
+                        android:id="@+id/led_u1_1"
                         style="@style/led"
                         android:layout_width="@dimen/led_diam"
                         android:layout_height="@dimen/led_diam" />
@@ -155,5 +155,22 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageButton
+            android:id="@+id/ib_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
 
 </LinearLayout>

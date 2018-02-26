@@ -25,10 +25,4 @@ public enum Options {
     public String getTitle() {
         return title;
     }
-
-    public Options getRandom() {
-        Random r = new Random();
-        int index = r.nextInt(Options.values().length);
-        return Options.values()[index];
-    }
 }

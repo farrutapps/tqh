@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.farrutaps.tqhapp.R;
+import com.farrutaps.tqhapp.controller.Controller;
 
 /**
  * Created by Sònia Batllori on 23/02/2018.
@@ -26,8 +27,12 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        //Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
         Toast.makeText(mContext, mContext.getString(R.string.received_status),Toast.LENGTH_LONG).show();
+
+        if(result != null)
+        {
+            Controller.getDataFromEsteful(result);
+        }
     }
 
     @Override

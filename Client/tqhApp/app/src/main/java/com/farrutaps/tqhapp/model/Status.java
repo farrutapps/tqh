@@ -1,6 +1,7 @@
 package com.farrutaps.tqhapp.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Status {
@@ -15,6 +16,11 @@ public class Status {
 
     public Map<Options, Boolean> getStatusInfoMap() {
         return statusInfoMap;
+    }
+
+    public void setStatusInfoMap(List<Boolean> ledStates) {
+        for(int i=0; i<Options.values().length; i++)
+            setOnToOption(Options.values()[i], ledStates.get(i));
     }
 
     public boolean getOnFromOption(Options op) {

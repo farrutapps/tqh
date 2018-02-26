@@ -61,7 +61,8 @@ public class WebServices {
         conn.connect();
 
         // Get the response
-        return getResponse(conn, HttpURLConnection.HTTP_ACCEPTED);
+        getResponse(conn, HttpURLConnection.HTTP_ACCEPTED);
+        return null;
     }
 
     private static String read(HttpURLConnection conn) throws Exception {
@@ -84,21 +85,22 @@ public class WebServices {
 
         int responseCode = conn.getResponseCode();
 
-        String result;
-        result = "HTTP ResponseCode: " + responseCode + " " + conn.getResponseMessage();
+        String result = "";
+        //result = "HTTP ResponseCode: " + responseCode + " " + conn.getResponseMessage() + "\n";
 
         if(responseCode == expectedResponseCode) {
-            result += "\n" + read(conn);
+            result += read(conn);
             conn.disconnect();
         }
         return result;
     }
 
     public static String sendRequest(Request request, String data) {
-        String response = "Error";
+        String response = null;
         try {
             HttpURLConnection conn = createHttpURLConnection(request);
             response = (request == Request.GET) ? sendGet(conn) : sendPost(conn, data);
+
         } catch (Exception e) {}
 
         return response;

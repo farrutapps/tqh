@@ -6,13 +6,14 @@
 
     <string name="user0">Wilde Zottel</string>
     <string name="user1">Farrut Kätzle</string>
-    <string name="wz">WZ</string>
-    <string name="fk">FK</string>
+    <string name="u0">WZ</string>
+    <string name="u1">FK</string>
     <string name="my_status">My status</string>
 
     <string name="back_home">I\'ll be back home at ca. %1$d.</string>
     <string name="back_home_dk">Idk when I\'ll be back home.</string>
     <string name="any_error">"Error. Something went wrong."</string>
+    <string name="error_esteful_not_available">Esteful is sleeping. Try again later.</string>
 
     <string name="sent_status">Torul\'s status sent to Esteful.</string>
     <string name="received_status">Esteful got Torul\'s data.</string>

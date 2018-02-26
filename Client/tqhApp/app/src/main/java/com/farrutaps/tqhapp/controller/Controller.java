@@ -4,26 +4,27 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.client.AsyncConnection;
+import com.farrutaps.tqhapp.client.PayloadItem;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
-import com.farrutaps.tqhapp.view.MainActivity;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
 
     private static List<User> users;
     private static User master;
-    private static View view;
     private static Activity mainActivity;
+    private static View view;
+    private static StatusAdapter mainAdapter;
+
 
     public Controller(Activity activity)
     {
@@ -32,6 +33,10 @@ public class Controller {
         users = new ArrayList<>();
         users.add(new User(view.getResources().getString(R.string.user0)));
         users.add(new User(view.getResources().getString(R.string.user1)));
+    }
+
+    public static void setMainAdapter(StatusAdapter adapter) {
+        mainAdapter = adapter;
     }
 
     public static void setMaster(User user) {
@@ -74,30 +79,47 @@ public class Controller {
         }
     }
 
-    public static String sendDataToEsteful() {
-        try
-        {
-            // Create the json object to send the data
-            JSONArray resultList = new JSONArray();
-            JSONObject data = new JSONObject();
-            JSONArray ledStates = new JSONArray();
+    public static void sendPost() throws Exception{
+        runConnectionThread(sendDataToEsteful());
+    }
 
-            data.put(Parameters.USER_ID.name().toLowerCase(), getMasterId());
-            data.put(Parameters.TIME.name().toLowerCase(), getMaster().getBackHome());
-            for(int i=0; i<getMaster().getStatus().getStatusInfoMap().keySet().size(); i++)
-                ledStates.put(i, getMaster().getStatus().getOnFromOption(Options.values()[i]));
-            data.put(Parameters.LED_STATES.name().toLowerCase(), ledStates);
-            resultList.put(0, data);
+    private static String sendDataToEsteful() throws Exception {
 
-            // Send data to the server
-            runConnectionThread(resultList.toString());
+        // TODO use GSON instead JSON
+        // Create the json object to send the data
+        JSONArray resultList = new JSONArray();
+        JSONObject data = new JSONObject();
+        JSONArray ledStates = new JSONArray();
 
-            return view.getResources().getString(R.string.sent_status);
+        data.put(Parameters.USER_ID.name().toLowerCase(), getMasterId());
+        data.put(Parameters.TIME.name().toLowerCase(), getMaster().getBackHome());
+        for(int i=0; i<getOptions().length; i++)
+            ledStates.put(i, getMaster().getStatus().getOnFromOption(getOptions()[i]));
+        data.put(Parameters.LED_STATES.name().toLowerCase(), ledStates);
+        resultList.put(0, data);
+
+        return resultList.toString();
+    }
+
+    public static void sendGet() {
+        runConnectionThread(null);
+    }
+
+    public static void getDataFromEsteful(String data) {
+        List<PayloadItem> response = PayloadItem.parseJSON(data);
+        for(int i = 0; i < response.size(); i++) {
+            int id = response.get(i).getUserId();
+            int time = response.get(i).getTime();
+            List<Boolean> ledStates = response.get(i).getLedStates();
+
+            User user = getUsers().get(id);
+            user.setBackHome(time);
+
+            // TODO debug that
+            for(int j=0; j < getOptions().length; j++)
+                user.getStatus().setOnToOption(getOptions()[j],ledStates.get(j));
         }
-        catch(Exception e)
-        {
-            return view.getResources().getString(R.string.any_error);
-        }
+        mainAdapter.notifyDataSetChanged();
     }
 
     private static void runConnectionThread(final String data) {
@@ -109,7 +131,10 @@ public class Controller {
                         public void run() {
                             try {
                                 AsyncConnection asyncConnection = new AsyncConnection(mainActivity);
-                                asyncConnection.execute(data);
+                                if(data != null)
+                                    asyncConnection.execute(data);
+                                else
+                                    asyncConnection.execute();
                             } catch (Exception e) {
                             }
                         }
