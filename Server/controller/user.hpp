@@ -21,6 +21,9 @@ namespace controller {
         user();
         user(int user_id);
         static int find(std::vector<user> &users, int usr_id);
+
+    private:
+        int num_states;
     };
 
     /// convert user to json. automatically called by nlohmann::json

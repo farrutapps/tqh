@@ -10,7 +10,7 @@ namespace controller {
 
     user::user(int user_id) : user_id(user_id) {
         time = 0;
-        led_states.resize(8);
+        led_states.resize(num_states);
     }
 
     int user::find (std::vector<user> &users, int usr_id) {
