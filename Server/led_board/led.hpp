@@ -9,7 +9,7 @@
 
 namespace led_board {
     class led {
-        gpio gpio;
+        gpio gpio_;
 
     public:
         led(int pin_num);

@@ -13,22 +13,22 @@ namespace led_board {
     }
 
     void gpio::init_vars(int pin_num) {
-        pin_number = pin_num;
+        pin_number_ = pin_num;
 
-        pin_name = "gpio";
-        pin_name.append(std::to_string(pin_number));
+        pin_name_ = "gpio_";
+        pin_name_.append(std::to_string(pin_number_));
     }
 
     void gpio::write_to_file(std::string filename, std::string content) {
         boost::filesystem::path filename_fs = filename;
-        boost::filesystem::path file_path = base_dir / filename_fs;
+        boost::filesystem::path file_path = base_dir_ / filename_fs;
         std::ofstream file(file_path.c_str());
         if (file.is_open()) {
             file << content;
             file.close();
         }
         else {
-            std::string msg = "Failed to open gpio file: ";
+            std::string msg = "Failed to open gpio_ file: ";
             msg.append(file_path.string());
             std::cerr << msg << std::endl;
         }
@@ -36,7 +36,7 @@ namespace led_board {
 
     std::string gpio::read_from_file(std::string filename) {
         boost::filesystem::path filename_fs = filename;
-        boost::filesystem::path file_path = base_dir / filename_fs;
+        boost::filesystem::path file_path = base_dir_ / filename_fs;
         std::ifstream file(file_path.c_str());
 
         std::string output;
@@ -45,7 +45,7 @@ namespace led_board {
             file.close();
         }
         else {
-            std::string msg = "Failed to open gpio file: ";
+            std::string msg = "Failed to open gpio_ file: ";
             msg.append(file_path.string());
             std::cerr << msg << std::endl;
         }
@@ -57,15 +57,15 @@ namespace led_board {
     }
 
     void gpio::export_pin() {
-        write_to_file("export", std::to_string(pin_number));
+        write_to_file("export", std::to_string(pin_number_));
     }
 
     void gpio::unexport_pin() {
-        write_to_file("unexport", std::to_string(pin_number));
+        write_to_file("unexport", std::to_string(pin_number_));
     }
 
     void gpio::set_direction(bool out) {
-        std::string filename = pin_name;
+        std::string filename = pin_name_;
         filename.append("/direction");
 
         if(out) {
@@ -77,13 +77,13 @@ namespace led_board {
     }
 
     void gpio::set_value(bool value) {
-        std::string filename = pin_name;
+        std::string filename = pin_name_;
         filename.append("/value");
         write_to_file(filename, std::to_string((int)value));
     }
 
     std::string gpio::read_value() {
-        std::string filename = pin_name;
+        std::string filename = pin_name_;
         filename.append("/value");
         return read_from_file(filename);
     }

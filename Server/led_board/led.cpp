@@ -6,32 +6,32 @@
 
 namespace led_board {
     led::led(int pin_num) {
-        gpio.set_pin(pin_num);
-        gpio.export_pin();
-        gpio.set_direction(true);
-        gpio.set_value(false);
+        gpio_.set_pin(pin_num);
+        gpio_.export_pin();
+        gpio_.set_direction(true);
+        gpio_.set_value(false);
     }
 
     led::~led() {
         off();
-        gpio.set_value(false);
-        gpio.unexport_pin();
+        gpio_.set_value(false);
+        gpio_.unexport_pin();
     }
 
     void led::on() {
-        gpio.set_value(true);
+        gpio_.set_value(true);
     }
 
     void led::off() {
-        gpio.set_value(false);
+        gpio_.set_value(false);
     }
 
     void led::set_state(bool value) {
-        gpio.set_value(value);
+        gpio_.set_value(value);
     }
 
     void led::opposite() {
-        std::string curr_value_str = gpio.read_value();
+        std::string curr_value_str = gpio_.read_value();
         int curr_value = std::atoi(curr_value_str.c_str());
         if (curr_value == 1) {
             off();

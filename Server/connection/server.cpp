@@ -23,7 +23,7 @@ namespace http {
                   connection_manager_(),
                   request_handler_(rest_endpoints)
         {
-            // Register to handle the signals that indicate when the server should exit.
+            // Register to handle the signals_ that indicate when the server should exit.
             // It is safe to register for the same signal multiple times in a program,
             // provided all registration for the specified signal is made through Asio.
             signals_.add(SIGINT);
@@ -52,7 +52,7 @@ namespace http {
                     [this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket)
                     {
                         // Check whether the server was stopped by a signal before this
-                        // completion handler had a chance to run.
+                        // completion handler had a chance to run_.
                         if (!acceptor_.is_open())
                         {
                             return;
@@ -74,7 +74,7 @@ namespace http {
                     [this](boost::system::error_code /*ec*/, int /*signo*/)
                     {
                         // The server is stopped by cancelling all outstanding asynchronous
-                        // operations. Once all operations have finished the io_context::run()
+                        // operations. Once all operations have finished the io_context_::run_()
                         // call will exit.
                         acceptor_.close();
                         connection_manager_.stop_all();

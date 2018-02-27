@@ -17,23 +17,24 @@
 namespace led_board {
 
     class led_controller : public controller::update_listener {
-        std::vector<unsigned int> msg_pin_numbers = {4, 17, 27, 22, 5, 6, 13, 19, 26};
-        std::vector<unsigned int> user_pin_numbers = {18, 25};
-        std::vector<unsigned int> time_pin_numbers = {12, 16, 20, 21};
+        std::vector<unsigned int> msg_pin_numbers_ = {4, 17, 27, 22, 5, 6, 13, 19, 26};
+        std::vector<unsigned int> user_pin_numbers_ = {18, 25};
+        std::vector<unsigned int> time_pin_numbers_ = {12, 16, 20, 21};
 
-        std::vector<led> message_leds;
-        std::vector<led> time_leds;
-        std::vector<led> user_leds;
+        std::vector<led> message_leds_;
+        std::vector<led> time_leds_;
+        std::vector<led> user_leds_;
 
-        std::vector<controller::user> users;
-        unsigned long current_displayed_user_idx = 0;
+        std::vector<controller::user> users_;
+        unsigned long current_displayed_user_idx_ = 0;
 
-        boost::asio::io_context *io_context;
-        int timer_seconds = 2;
-        boost::asio::deadline_timer timer;
-        bool run = true;
+        boost::asio::io_context *io_context_;
+        int timer_seconds_ = 2;
+        boost::asio::deadline_timer timer_;
+        bool run_ = true;
 
-        boost::asio::signal_set signals;
+        boost::asio::signal_set signals_;
+
         void stop();
 
         void assert_valid_led_pins(std::vector<unsigned int> &pin_numbers);
