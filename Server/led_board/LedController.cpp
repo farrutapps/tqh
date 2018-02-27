@@ -6,13 +6,25 @@
 
 
 
-LedController::LedController() : timer(io, boost::posix_time::seconds(timer_seconds)) {
+LedController::LedController(boost::asio::io_context *io_context)
+        : io_context(io_context),
+          timer(*io_context, boost::posix_time::seconds(timer_seconds))
+{
     init_leds();
+    controller::user empty_usr;
+    empty_usr.user_id = 0;
+    empty_usr.time = 0;
+    empty_usr.led_states = std::vector<bool>(8, false);
+
+    users.push_back(empty_usr);
+
+    empty_usr.user_id = 1;
+    users.push_back(empty_usr);
+
     std::cout << "before" << std::endl;
     // calls timed_led_control after timer expired. returns immediately.
     timer.async_wait(boost::bind(&LedController::timed_led_control, this));
     std::cout << "after" << std::endl;
-
 }
 LedController::~LedController() { }
 
@@ -51,10 +63,7 @@ void LedController::set_time_leds(std::vector<unsigned int> &pin_numbers) {
 
 void LedController::timed_led_control() {
 
-    std::cout << "Switch led display" << std::endl;
-
     current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
-
     const controller::user usr = users[current_displayed_user_idx];
 
     for (int i = 0; i < message_leds.size(); ++i) {
@@ -90,7 +99,9 @@ void LedController::onUpdate(controller::user usr) {
 }
 
 std::string LedController::time2binary(unsigned int time) {
-    std::string binary = std::bitset<8>(time).to_string();
+    std::bitset<4> bits(time);
+    std::string binary = bits.to_string();
+    return binary;
 }
 
 void LedController::assert_valid_led_pins(std::vector<unsigned int> &pin_numbers) {

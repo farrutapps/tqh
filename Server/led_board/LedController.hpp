@@ -24,7 +24,7 @@ class LedController : public controller::UpdateListener {
     std::vector<controller::user> users;
     unsigned long current_displayed_user_idx = 0;
 
-    boost::asio::io_service io;
+    boost::asio::io_context *io_context;
     int timer_seconds = 2;
     boost::asio::deadline_timer timer;
 
@@ -33,7 +33,7 @@ class LedController : public controller::UpdateListener {
     std::string time2binary(unsigned int time);
     void init_leds();
 public:
-    LedController();
+    explicit LedController(boost::asio::io_context *io_context);
     ~LedController();
     void timed_led_control();
 

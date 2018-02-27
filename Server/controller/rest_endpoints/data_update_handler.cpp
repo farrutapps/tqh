@@ -26,6 +26,7 @@ namespace controller {
                 }
 
                 users[user_i.user_id] = user_i;
+                c->notifyUpdate(user_i);
             }
             c->set_users(users);
         }

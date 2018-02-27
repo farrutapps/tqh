@@ -16,10 +16,10 @@ namespace http {
     namespace server {
 
         server::server(const std::string& address, const std::string& port,
-                       const std::vector<rest_endpoint_handler*> rest_endpoints)
-                : io_context_(1),
-                  signals_(io_context_),
-                  acceptor_(io_context_),
+                       const std::vector<rest_endpoint_handler*> rest_endpoints, boost::asio::io_context *io_context)
+                  : io_context_(io_context),
+                  signals_(*io_context_),
+                  acceptor_(*io_context_),
                   connection_manager_(),
                   request_handler_(rest_endpoints)
         {
@@ -35,7 +35,7 @@ namespace http {
             do_await_stop();
 
             // Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
-            boost::asio::ip::tcp::resolver resolver(io_context_);
+            boost::asio::ip::tcp::resolver resolver(*io_context_);
             boost::asio::ip::tcp::endpoint endpoint =
                     *resolver.resolve(address, port).begin();
             acceptor_.open(endpoint.protocol());
@@ -44,15 +44,6 @@ namespace http {
             acceptor_.listen();
 
             do_accept();
-        }
-
-        void server::run()
-        {
-            // The io_context::run() call will block until all asynchronous operations
-            // have finished. While the server is running, there is always at least one
-            // asynchronous operation outstanding: the asynchronous accept call waiting
-            // for new incoming connections.
-            io_context_.run();
         }
 
         void server::do_accept()

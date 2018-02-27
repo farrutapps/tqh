@@ -29,10 +29,12 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        controller::controller state_controller(2, 7);
+        boost::asio::io_context io_context;
+
+        controller::controller state_controller(2, 7, &io_context);
         std::vector<http::server::rest_endpoint_handler*> handlers =state_controller.get_endpoint_handlers();
         // Initialise the server.
-        http::server::server s(argv[1], argv[2], handlers );
+        http::server::server s(argv[1], argv[2], handlers, &io_context);
 
         Led led(4);
         led.on();
@@ -40,7 +42,7 @@ int main(int argc, char* argv[])
         led.opposite();
 
         // Run the server until stopped.
-        s.run();
+        io_context.run();
     }
     catch (std::exception& e)
     {

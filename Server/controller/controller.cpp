@@ -10,7 +10,10 @@ using rest_endpoint_handler = http::server::rest_endpoint_handler;
 
 namespace controller {
 
-    controller::controller(int num_users, int num_leds) {
+    controller::controller(int num_users, int num_leds, boost::asio::io_context *io_context)
+            : io_context(io_context),
+              led_controller_(io_context){
+
         for (int i=0; i<num_users; ++i) {
             user new_user = {i, 0, std::vector<bool>(num_leds, 0)};
             users_.push_back(new_user);
