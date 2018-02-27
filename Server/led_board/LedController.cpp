@@ -3,7 +3,7 @@
 //
 
 #include "LedController.hpp"
-
+#include <bitset>
 
 
 LedController::LedController(boost::asio::io_context *io_context)
