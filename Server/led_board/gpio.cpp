@@ -15,7 +15,7 @@ namespace led_board {
     void gpio::init_vars(int pin_num) {
         pin_number_ = pin_num;
 
-        pin_name_ = "gpio_";
+        pin_name_ = "gpio";
         pin_name_.append(std::to_string(pin_number_));
     }
 
@@ -28,7 +28,7 @@ namespace led_board {
             file.close();
         }
         else {
-            std::string msg = "Failed to open gpio_ file: ";
+            std::string msg = "Failed to open gpio file: ";
             msg.append(file_path.string());
             std::cerr << msg << std::endl;
         }
