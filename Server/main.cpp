@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        controller::controller state_controller = controller::controller(2, 7);
+        controller::controller state_controller(2, 7);
         std::vector<http::server::rest_endpoint_handler*> handlers =state_controller.get_endpoint_handlers();
         // Initialise the server.
         http::server::server s(argv[1], argv[2], handlers );

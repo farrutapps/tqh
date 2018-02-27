@@ -3,17 +3,18 @@
 //
 
 #include "LedController.hpp"
-#include <bitset>
-#include <thread>
-LedController::LedController() {
+
+
+
+LedController::LedController() : timer(io, boost::posix_time::seconds(timer_seconds)) {
     init_leds();
+    std::cout << "before" << std::endl;
+    // calls timed_led_control after timer expired. returns immediately.
+    timer.async_wait(boost::bind(&LedController::timed_led_control, this));
+    std::cout << "after" << std::endl;
 
-
-    std::thread led_threads([this](){
-        timed_led_control();
-    });
 }
-LedController::~LedController() { stop = true; }
+LedController::~LedController() { }
 
 void LedController::init_leds() {
 
@@ -24,7 +25,7 @@ void LedController::init_leds() {
         message_leds.push_back(Led(time_pin_numbers[i]));
     }
     for (int i=0; i<user_pin_numbers.size(); ++i) {
-        message_leds.push_back(Led(time_pin_numbers[i]));
+        message_leds.push_back(Led(user_pin_numbers[i]));
     }
 
 }
@@ -49,32 +50,33 @@ void LedController::set_time_leds(std::vector<unsigned int> &pin_numbers) {
 
 
 void LedController::timed_led_control() {
-    while(true) {
-        if (stop)
-            break;
 
-        current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
+    std::cout << "Switch led display" << std::endl;
 
-        const controller::user usr = users[current_displayed_user_idx];
+    current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
 
-        for (int i=0; i<message_leds.size(); ++i) {
-            message_leds[i].set_state(usr.led_states[i]);
-        }
+    const controller::user usr = users[current_displayed_user_idx];
 
-        for (int i=0; i<user_leds.size(); ++i) {
-            if (i == current_displayed_user_idx) {
-                user_leds[i].set_state(true);
-            }
-            else {
-                user_leds[i].set_state(false);
-            }
-        }
+    for (int i = 0; i < message_leds.size(); ++i) {
+        message_leds[i].set_state(usr.led_states[i]);
+    }
 
-        std::string time_binary = time2binary(usr.time);
-        for (int i=0; i<time_leds.size(); ++i) {
-            time_leds[i].set_state((bool)time_binary[i]);
+    for (int i = 0; i < user_leds.size(); ++i) {
+        if (i == current_displayed_user_idx) {
+            user_leds[i].set_state(true);
+        } else {
+            user_leds[i].set_state(false);
         }
     }
+
+    std::string time_binary = time2binary(usr.time);
+    for (int i = 0; i < time_leds.size(); ++i) {
+        time_leds[i].set_state((bool) time_binary[i]);
+    }
+
+    // calls timed_led_control after timer expired. returns immediately.
+    timer.expires_at(timer.expires_at() + boost::posix_time::seconds(timer_seconds));
+    timer.async_wait(boost::bind(&LedController::timed_led_control, this));
 }
 
 void LedController::onUpdate(controller::user usr) {
