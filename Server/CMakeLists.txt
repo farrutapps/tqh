@@ -39,13 +39,13 @@ add_executable(Server
         controller/controller.cpp
         controller/controller.hpp
         controller/user.hpp
-        controller/UpdateListener.hpp
-        led_board/Gpio.cpp
-        led_board/Gpio.hpp
-        led_board/Led.cpp
-        led_board/Led.hpp
-        led_board/LedController.cpp
-        led_board/LedController.hpp
+        controller/update_listener.hpp
+        led_board/gpio.cpp
+        led_board/gpio.hpp
+        led_board/led.cpp
+        led_board/led.hpp
+        led_board/led_controller.cpp
+        led_board/led_controller.hpp
         controller/user.cpp)
 
 

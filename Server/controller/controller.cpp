@@ -41,13 +41,13 @@ namespace controller {
         }
     }
 
-    void controller::register_listener(UpdateListener *listener) {
+    void controller::register_listener(update_listener *listener) {
         update_listeners_.push_back(listener);
     }
 
     void controller::notifyUpdate(user user) {
         for (int i=0; i<update_listeners_.size(); ++i) {
-            update_listeners_[i]->onUpdate(user);
+            update_listeners_[i]->on_update(user);
         }
     }
 } // namespace controller

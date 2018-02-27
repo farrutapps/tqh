@@ -16,7 +16,7 @@ namespace controller {
     struct user {
         int user_id;
         unsigned int time;
-        std::vector<bool> led_states;
+        std::vector<bool> states;
 
         user();
         user(int user_id);
@@ -28,14 +28,14 @@ namespace controller {
 
     /// convert user to json. automatically called by nlohmann::json
     inline void to_json(json& j, const user& u) {
-        j = json{{"user_id", u.user_id}, {"time", u.time}, {"led_states", u.led_states}};
+        j = json{{"user_id", u.user_id}, {"time", u.time}, {"states", u.states}};
     }
 
     /// user from json
     inline void from_json(const json& j, user& u) {
         u.user_id = j.at("user_id").get<int>();
         u.time = j.at("time").get<int>();
-        u.led_states = j.at("led_states").get< std::vector<bool> >();
+        u.states = j.at("states").get< std::vector<bool> >();
     }
 }
 

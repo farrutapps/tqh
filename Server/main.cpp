@@ -15,7 +15,7 @@
 #include "controller/user.hpp"
 #include "connection/rest_endpoint_handler.hpp"
 #include "controller/controller.hpp"
-#include "led_board/Led.hpp"
+#include "led_board/led.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
         // Initialise the server.
         http::server::server s(argv[1], argv[2], handlers, &io_context);
 
-        //Led led(4);
+        //led led(4);
         //led.on();
 
         // Run the server until stopped.

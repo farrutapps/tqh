@@ -10,9 +10,9 @@
 
 namespace controller {
 
-    class UpdateListener {
+    class update_listener {
     public:
-    virtual void onUpdate(user usr) = 0;
+    virtual void on_update(user usr) = 0;
     };
 
 } // namespace controller

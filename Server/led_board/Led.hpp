@@ -5,19 +5,20 @@
 #ifndef SERVER_LED_HPP
 #define SERVER_LED_HPP
 
-#include "Gpio.hpp"
+#include "gpio.hpp"
 
-class Led {
-    Gpio gpio;
+namespace led_board {
+    class led {
+        gpio gpio;
 
-public:
-    Led(int pin_num);
-    ~Led();
-    void on();
-    void off();
-    void set_state(bool value);
-    void opposite();
-};
-
+    public:
+        led(int pin_num);
+        ~led();
+        void on();
+        void off();
+        void set_state(bool value);
+        void opposite();
+    };
+ } // namespace led_board
 
 #endif //SERVER_LED_HPP
