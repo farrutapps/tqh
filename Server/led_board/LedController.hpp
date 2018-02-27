@@ -15,7 +15,7 @@
 #include "../controller/user.hpp"
 
 class LedController : public controller::UpdateListener {
-    std::vector<unsigned int> msg_pin_numbers = {4, 17, 27, 22, 5, 6, 13, 19};
+    std::vector<unsigned int> msg_pin_numbers = {4, 17, 27, 22, 5, 6, 13, 19, 26};
     std::vector<unsigned int> user_pin_numbers = {18, 25};
     std::vector<unsigned int> time_pin_numbers = {12, 16, 20, 21};
     std::vector<Led> message_leds;
