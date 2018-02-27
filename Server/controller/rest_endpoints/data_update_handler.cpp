@@ -21,11 +21,16 @@ namespace controller {
                 user user_i = element;
 
                 // check whether updated values make sense
-                if (user_i.user_id >= users.size() || user_i.time > 12)  {
+                if (user_i.user_id > users.size() || user_i.time > 12)  {
                     return http::server::reply::stock_reply(http::server::reply::forbidden);
                 }
-                int idx = find(users, user_i.user_id);
-                users[idx] = user_i;
+                int idx = user::find(users, user_i.user_id);
+                if (idx == -1) {
+                    users.push_back(user_i);
+                }
+                else {
+                    users[idx] = user_i;
+                }
             }
             c->set_users(users);
         }

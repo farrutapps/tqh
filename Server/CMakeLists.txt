@@ -46,7 +46,7 @@ add_executable(Server
         led_board/Led.hpp
         led_board/LedController.cpp
         led_board/LedController.hpp
-        )
+        controller/user.cpp)
 
 
 if(Boost_FOUND)

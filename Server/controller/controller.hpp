@@ -16,6 +16,7 @@
 namespace controller {
     class controller {
         boost::asio::io_context *io_context;
+        int num_users = 2;
         std::vector<user> users_;
         std::vector<UpdateListener *> update_listeners_;
         LedController led_controller_;

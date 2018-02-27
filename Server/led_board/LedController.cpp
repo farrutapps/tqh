@@ -32,7 +32,6 @@ LedController::~LedController() {
 }
 
 void LedController::init_leds() {
-    std::cout << "init GPIOs" << std::endl;
 
     message_leds.reserve(msg_pin_numbers.size());
     for (auto pin: msg_pin_numbers) {
@@ -58,7 +57,6 @@ void LedController::stop() {
 void LedController::timed_led_control() {
     if (users.size() > 0) {
         current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
-        std::cout << "Showing user " << std::to_string(current_displayed_user_idx) << std::endl;
         const controller::user usr = users[current_displayed_user_idx];
 
         for (int i = 0; i < message_leds.size(); ++i) {
@@ -86,9 +84,7 @@ void LedController::timed_led_control() {
 }
 
 void LedController::onUpdate(controller::user usr) {
-    std::cout << "Update leds" << std::endl;
-
-    int id = controller::find(users, usr.user_id);
+    int id = controller::user::find(users, usr.user_id);
     if (id == -1) {
         users.push_back(usr);
     }

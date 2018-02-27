@@ -15,6 +15,12 @@ namespace controller {
               led_controller_(io_context){
 
         register_listener(&led_controller_);
+
+        std::vector<user> users;
+        for (int i=0; i<num_users; ++i) {
+            users.emplace_back(i);
+        }
+        set_users(users);
     }
 
     std::vector<rest_endpoint_handler*> controller::get_endpoint_handlers() {
