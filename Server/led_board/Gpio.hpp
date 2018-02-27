@@ -11,7 +11,7 @@
 class Gpio {
     int pin_number=-1;
     std::string pin_name;
-    boost::filesystem::path base_dir = "/Users/Sebastian/Desktop/debug"; // "/sys/class/gpio/";  "/Users/Sebastian/Desktop/debug";
+    boost::filesystem::path base_dir = "/sys/class/gpio/"; // "/sys/class/gpio/";  "/Users/Sebastian/Desktop/debug";
     void init_vars(int pin_num);
     void write_to_file(std::string filename, std::string content);
     std::string read_from_file(std::string filename);

@@ -27,6 +27,9 @@ class LedController : public controller::UpdateListener {
     boost::asio::io_context *io_context;
     int timer_seconds = 2;
     boost::asio::deadline_timer timer;
+    bool run = true;
+
+    void stop();
 
     void assert_valid_led_pins(std::vector<unsigned int> &pin_numbers);
     void onUpdate(controller::user usr) override;

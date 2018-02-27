@@ -21,12 +21,19 @@ LedController::LedController(boost::asio::io_context *io_context)
     empty_usr.user_id = 1;
     users.push_back(empty_usr);
 
-    std::cout << "before" << std::endl;
     // calls timed_led_control after timer expired. returns immediately.
     timer.async_wait(boost::bind(&LedController::timed_led_control, this));
-    std::cout << "after" << std::endl;
+
+    // Construct a signal set registered for process termination.
+    boost::asio::signal_set signals(*io_context, SIGINT, SIGTERM);
+
+    // Start an asynchronous wait for one of the signals to occur.
+    signals.async_wait(boost::bind(&LedController::stop,this));
 }
-LedController::~LedController() { }
+
+LedController::~LedController() {
+    stop();
+}
 
 void LedController::init_leds() {
 
@@ -40,6 +47,10 @@ void LedController::init_leds() {
         message_leds.push_back(Led(user_pin_numbers[i]));
     }
 
+}
+
+void LedController::stop() {
+    run = false;
 }
 
 void LedController::set_msg_leds(std::vector<unsigned int> &pin_numbers) {
@@ -83,9 +94,12 @@ void LedController::timed_led_control() {
         time_leds[i].set_state((bool) time_binary[i]);
     }
 
-    // calls timed_led_control after timer expired. returns immediately.
-    timer.expires_at(timer.expires_at() + boost::posix_time::seconds(timer_seconds));
-    timer.async_wait(boost::bind(&LedController::timed_led_control, this));
+    if (run) {
+        // calls timed_led_control after timer expired. returns immediately.
+        timer.expires_at(timer.expires_at() + boost::posix_time::seconds(timer_seconds));
+        timer.async_wait(boost::bind(&LedController::timed_led_control, this));
+    }
+
 }
 
 void LedController::onUpdate(controller::user usr) {
