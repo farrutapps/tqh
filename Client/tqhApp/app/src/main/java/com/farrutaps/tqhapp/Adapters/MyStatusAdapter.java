@@ -70,6 +70,7 @@ public class MyStatusAdapter extends BaseAdapter {
         // Set item data
         myStatusHolder.ctvMyStatus.setText(getItemName(position));
         myStatusHolder.ctvMyStatus.setChecked(isStatusOn(position));
+        myStatusHolder.ctvMyStatus.setChecked(master.getStatus().getOnFromOption(getItem(position)));
 
         myStatusHolder.ctvMyStatus.setOnClickListener(new View.OnClickListener() {
             @Override

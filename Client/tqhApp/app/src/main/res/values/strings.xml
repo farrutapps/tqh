@@ -18,9 +18,10 @@
     <string name="back_home">I\'ll be back home at ca. %1$d.</string>
     <string name="back_home_dk">Idk when I\'ll be back home.</string>
     <string name="any_error">"Error. Something went wrong."</string>
-    <string name="error_esteful_not_available">Esteful is sleeping. Try again later.</string>
+    <string name="error_esteful_not_available">Esteful is not available.</string>
 
-    <string name="sent_status">Torul\'s status sent to Esteful.</string>
-    <string name="received_status">Esteful got Torul\'s data.</string>
+    <string name="sent_status">Your status was sent to Esteful.</string>
+    <string name="success_get">Data is now actualized.</string>
+    <string name="succes_post">Esteful got your data.</string>
 
 </resources>

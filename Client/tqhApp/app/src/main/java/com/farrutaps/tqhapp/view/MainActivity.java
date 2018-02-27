@@ -1,6 +1,5 @@
 package com.farrutaps.tqhapp.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -30,7 +29,6 @@ import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.controller.Controller;
 import com.farrutaps.tqhapp.controller.Parameters;
 
-import java.util.ResourceBundle;
 
 
 public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
 
         try {
             Controller.setMaster(Controller.getUsers().get(id));
+            Controller.sendGet();
         } catch (Exception e) {}
 
         this.initResources();
@@ -300,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             try {
                 lvMyStatusAdapter = new MyStatusAdapter(rootView.getContext(), Controller.getOptions(), Controller.getMaster());
                 lvMyStatus.setAdapter(lvMyStatusAdapter);
+                Controller.setUserAdapter(lvMyStatusAdapter);
             } catch (Exception e) {}
 
             /* ImageButton */

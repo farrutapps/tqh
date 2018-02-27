@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.farrutaps.tqhapp.Adapters.MyStatusAdapter;
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.client.AsyncConnection;
@@ -25,6 +26,7 @@ public class Controller {
     private static Activity mainActivity;
     private static View view;
     private static StatusAdapter mainAdapter;
+    private static MyStatusAdapter userAdapter;
     private static boolean enableToast;
 
     public Controller(Activity activity) {
@@ -51,6 +53,10 @@ public class Controller {
 
     public static void setMainAdapter(StatusAdapter adapter) {
         mainAdapter = adapter;
+    }
+
+    public static void setUserAdapter(MyStatusAdapter adapter) {
+        userAdapter = adapter;
     }
 
     public static void setMaster(User user) {
@@ -145,6 +151,7 @@ public class Controller {
             user.getStatus().setStatusInfoMap(states);
         }
         mainAdapter.notifyDataSetChanged();
+        userAdapter.notifyDataSetChanged();
         refreshBackHomeLeds();
     }
 

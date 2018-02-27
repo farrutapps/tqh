@@ -33,8 +33,10 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
             String responseCode = result.substring(0, 3);
             result = (responseCode.equals("200")) ? result.substring(3, result.length()) : null;
 
-            if(responseCode.charAt(0) == '2')
-                Controller.showToast(mContext, mContext.getString(R.string.received_status));
+            if(responseCode.equals(String.valueOf(HttpURLConnection.HTTP_OK)))
+                Controller.showToast(mContext, mContext.getString(R.string.success_get));
+            else if(responseCode.equals(String.valueOf(HttpURLConnection.HTTP_ACCEPTED)))
+                Controller.showToast(mContext, mContext.getString(R.string.succes_post));
             else
                 Controller.showToast(mContext, mContext.getString(R.string.any_error));
 
@@ -42,7 +44,9 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
                 Controller.getDataFromEsteful(result);
 
         } catch (Exception e) {
-            Controller.showToast(mContext,mContext.getString(R.string.error_esteful_not_available));
+            Controller.showToast(mContext, mContext.getString(R.string.error_esteful_not_available));
+            if(!Controller.isToastEnabled())
+                Toast.makeText(mContext, "Esteful is not available", Toast.LENGTH_LONG).show();
         }
     }
 
