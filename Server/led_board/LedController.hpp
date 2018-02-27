@@ -15,9 +15,9 @@
 #include "../controller/user.hpp"
 
 class LedController : public controller::UpdateListener {
-    std::vector<unsigned int> msg_pin_numbers = {4};
-    std::vector<unsigned int> user_pin_numbers = {27,13};
-    std::vector<unsigned int> time_pin_numbers = {17};
+    std::vector<unsigned int> msg_pin_numbers = {4, 17, 27, 22, 5, 6, 13, 19};
+    std::vector<unsigned int> user_pin_numbers = {18, 25};
+    std::vector<unsigned int> time_pin_numbers = {12, 16, 20, 21};
     std::vector<Led> message_leds;
     std::vector<Led> time_leds;
     std::vector<Led> user_leds;
@@ -28,6 +28,7 @@ class LedController : public controller::UpdateListener {
     int timer_seconds = 2;
     boost::asio::deadline_timer timer;
     bool run = true;
+    boost::asio::signal_set signals;
 
     void stop();
 
@@ -35,14 +36,11 @@ class LedController : public controller::UpdateListener {
     void onUpdate(controller::user usr) override;
     std::string time2binary(unsigned int time);
     void init_leds();
+
 public:
     explicit LedController(boost::asio::io_context *io_context);
     ~LedController();
     void timed_led_control();
-
-    void set_msg_leds(std::vector<unsigned int> &pin_numbers);
-    void set_user_leds(std::vector<unsigned int> &pin_numbers);
-    void set_time_leds(std::vector<unsigned int> &pin_numbers);
 };
 
 

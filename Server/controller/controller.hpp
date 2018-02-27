@@ -20,7 +20,7 @@ namespace controller {
         std::vector<UpdateListener *> update_listeners_;
         LedController led_controller_;
     public:
-        controller(int num_users, int num_leds, boost::asio::io_context *io_context);
+        controller(boost::asio::io_context *io_context);
         std::vector<user> get_users();
         void set_users(std::vector<user> users);
         std::vector<http::server::rest_endpoint_handler *> get_endpoint_handlers();

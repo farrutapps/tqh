@@ -4,31 +4,27 @@
 
 #include "LedController.hpp"
 #include <bitset>
-
+#include <vector>
 
 LedController::LedController(boost::asio::io_context *io_context)
         : io_context(io_context),
+          signals(*io_context, SIGINT, SIGTERM),
           timer(*io_context, boost::posix_time::seconds(timer_seconds))
 {
+    assert_valid_led_pins(msg_pin_numbers);
+    assert_valid_led_pins(user_pin_numbers);
+    assert_valid_led_pins(time_pin_numbers);
     init_leds();
-    controller::user empty_usr;
-    empty_usr.user_id = 0;
-    empty_usr.time = 0;
-    empty_usr.led_states = std::vector<bool>(8, false);
-
-    users.push_back(empty_usr);
-
-    empty_usr.user_id = 1;
-    users.push_back(empty_usr);
 
     // calls timed_led_control after timer expired. returns immediately.
     timer.async_wait(boost::bind(&LedController::timed_led_control, this));
 
-    // Construct a signal set registered for process termination.
-    boost::asio::signal_set signals(*io_context, SIGINT, SIGTERM);
 
     // Start an asynchronous wait for one of the signals to occur.
-    signals.async_wait(boost::bind(&LedController::stop,this));
+    signals.async_wait([this](boost::system::error_code /*ec*/, int /*signo*/)
+                       {
+                           stop();
+                       });
 }
 
 LedController::~LedController() {
@@ -36,73 +32,62 @@ LedController::~LedController() {
 }
 
 void LedController::init_leds() {
+    std::cout << "init GPIOs" << std::endl;
 
-    for (int i=0; i<msg_pin_numbers.size(); ++i) {
-        message_leds.push_back(Led(msg_pin_numbers[i]));
-    }
-    for (int i=0; i<time_pin_numbers.size(); ++i) {
-        message_leds.push_back(Led(time_pin_numbers[i]));
-    }
-    for (int i=0; i<user_pin_numbers.size(); ++i) {
-        message_leds.push_back(Led(user_pin_numbers[i]));
+    message_leds.reserve(msg_pin_numbers.size());
+    for (auto pin: msg_pin_numbers) {
+        message_leds.emplace_back(pin);
     }
 
+    time_leds.reserve(msg_pin_numbers.size());
+    for (auto pin: time_pin_numbers) {
+        time_leds.emplace_back(pin);
+    }
+
+    user_leds.reserve(msg_pin_numbers.size());
+    for (auto pin: user_pin_numbers) {
+        user_leds.emplace_back(pin);
+    }
 }
 
 void LedController::stop() {
+    std::cout << "Stopping LedController" << std::endl;
     run = false;
 }
 
-void LedController::set_msg_leds(std::vector<unsigned int> &pin_numbers) {
-    assert_valid_led_pins(pin_numbers);
-    msg_pin_numbers = pin_numbers;
-    init_leds();
-}
-
-void LedController::set_user_leds(std::vector<unsigned int> &pin_numbers) {
-    assert_valid_led_pins(pin_numbers);
-    user_pin_numbers = pin_numbers;
-    init_leds();
-}
-
-void LedController::set_time_leds(std::vector<unsigned int> &pin_numbers) {
-    time_pin_numbers = pin_numbers;
-    assert_valid_led_pins(pin_numbers);
-    init_leds();
-}
-
-
 void LedController::timed_led_control() {
+    if (users.size() > 0) {
+        current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
+        std::cout << "Showing user " << std::to_string(current_displayed_user_idx) << std::endl;
+        const controller::user usr = users[current_displayed_user_idx];
 
-    current_displayed_user_idx = (current_displayed_user_idx + 1) % users.size();
-    const controller::user usr = users[current_displayed_user_idx];
+        for (int i = 0; i < message_leds.size(); ++i) {
+            message_leds[i].set_state(usr.led_states[i]);
+        }
 
-    for (int i = 0; i < message_leds.size(); ++i) {
-        message_leds[i].set_state(usr.led_states[i]);
-    }
+        for (int i = 0; i < user_leds.size(); ++i) {
+            if (i == current_displayed_user_idx) {
+                user_leds[i].set_state(true);
+            } else {
+                user_leds[i].set_state(false);
+            }
+        }
 
-    for (int i = 0; i < user_leds.size(); ++i) {
-        if (i == current_displayed_user_idx) {
-            user_leds[i].set_state(true);
-        } else {
-            user_leds[i].set_state(false);
+        std::string time_binary = time2binary(usr.time);
+        for (int i = 0; i < time_leds.size(); ++i) {
+            time_leds[i].set_state((bool) time_binary[i]);
         }
     }
-
-    std::string time_binary = time2binary(usr.time);
-    for (int i = 0; i < time_leds.size(); ++i) {
-        time_leds[i].set_state((bool) time_binary[i]);
-    }
-
     if (run) {
         // calls timed_led_control after timer expired. returns immediately.
         timer.expires_at(timer.expires_at() + boost::posix_time::seconds(timer_seconds));
         timer.async_wait(boost::bind(&LedController::timed_led_control, this));
     }
-
 }
 
 void LedController::onUpdate(controller::user usr) {
+    std::cout << "Update leds" << std::endl;
+
     int id = controller::find(users, usr.user_id);
     if (id == -1) {
         users.push_back(usr);
@@ -123,6 +108,7 @@ void LedController::assert_valid_led_pins(std::vector<unsigned int> &pin_numbers
     valid_led_pins[4] = true;
     valid_led_pins[5] = true;
     valid_led_pins[6] = true;
+    valid_led_pins[12] = true;
     valid_led_pins[13] = true;
     valid_led_pins[16] = true;
     valid_led_pins[17] = true;
@@ -133,6 +119,7 @@ void LedController::assert_valid_led_pins(std::vector<unsigned int> &pin_numbers
     valid_led_pins[22] = true;
     valid_led_pins[23] = true;
     valid_led_pins[24] = true;
+    valid_led_pins[25] = true;
     valid_led_pins[26] = true;
     valid_led_pins[27] = true;
 
@@ -141,7 +128,7 @@ void LedController::assert_valid_led_pins(std::vector<unsigned int> &pin_numbers
     for (int i=0; i<pin_numbers.size(); ++i) {
         const unsigned int pin = pin_numbers[i];
 
-        if (pin >= pin_numbers.size()) {
+        if (pin > valid_led_pins.size()) {
             are_valid = false;
             break;
         }

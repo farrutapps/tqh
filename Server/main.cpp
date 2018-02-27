@@ -31,15 +31,13 @@ int main(int argc, char* argv[])
 
         boost::asio::io_context io_context;
 
-        controller::controller state_controller(2, 7, &io_context);
+        controller::controller state_controller(&io_context);
         std::vector<http::server::rest_endpoint_handler*> handlers =state_controller.get_endpoint_handlers();
         // Initialise the server.
         http::server::server s(argv[1], argv[2], handlers, &io_context);
 
-        Led led(4);
-        led.on();
-        led.off();
-        led.opposite();
+        //Led led(4);
+        //led.on();
 
         // Run the server until stopped.
         io_context.run();
