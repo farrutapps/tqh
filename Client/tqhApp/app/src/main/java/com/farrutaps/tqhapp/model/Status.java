@@ -15,16 +15,16 @@ public class Status {
             this.statusInfoMap.put(op, false);
     }
 
-    public void setStatusInfoMap(List<Boolean> ledStates) {
+    public void setStatusInfoMap(List<Boolean> states) {
         for(int i=0; i<Options.values().length; i++)
-            setOnToOption(Options.values()[i], ledStates.get(i));
+            setOnToOption(Options.values()[i], states.get(i));
     }
 
-    public List<Boolean> getLedStatesFromStatusInfoMap() {
-        List<Boolean> ledStates = new ArrayList<>();
+    public List<Boolean> getStatesFromStatusInfoMap() {
+        List<Boolean> states = new ArrayList<>();
         for(int i=0; i<Options.values().length; i++)
-            ledStates.add(getOnFromOption(Options.values()[i]));
-        return ledStates;
+            states.add(getOnFromOption(Options.values()[i]));
+        return states;
     }
 
     public boolean getOnFromOption(Options op) {

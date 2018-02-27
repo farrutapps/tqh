@@ -1,5 +1,7 @@
 package com.farrutaps.tqhapp.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,8 @@ import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.controller.Controller;
 import com.farrutaps.tqhapp.controller.Parameters;
+
+import java.util.ResourceBundle;
 
 
 public class MainActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -59,10 +63,13 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         setContentView(R.layout.activity_main);
 
         new Controller(this);
-        // TODO delete test
+
+        Intent intent = getIntent();
+        int id = intent.getIntExtra(Parameters.USER_ID.name(), 0);
+
         try {
-            Controller.setMaster(Controller.getUsers().get(1));
-        } catch(Exception e) {}
+            Controller.setMaster(Controller.getUsers().get(id));
+        } catch (Exception e) {}
 
         this.initResources();
         this.setResources();
@@ -122,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

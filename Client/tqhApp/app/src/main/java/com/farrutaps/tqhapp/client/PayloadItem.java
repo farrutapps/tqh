@@ -1,7 +1,6 @@
 package com.farrutaps.tqhapp.client;
 
 import com.farrutaps.tqhapp.model.Options;
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
@@ -18,25 +17,25 @@ public class PayloadItem {
 
     @SerializedName("user_id")
     private int userId;
-    @SerializedName("led_states")
-    private List<Boolean> ledStates;
+    @SerializedName("states")
+    private List<Boolean> states;
     @SerializedName("time")
     private int time;
 
     public PayloadItem(int userId) {
         this.userId = userId;
         this.time = 0;
-        this.ledStates = new ArrayList<>();
+        this.states = new ArrayList<>();
         for(int i = 0; i< Options.values().length; i++)
-            this.ledStates.add(false);
+            this.states.add(false);
     }
 
     public int getUserId() {
         return userId;
     }
 
-    public List<Boolean> getLedStates() {
-        return ledStates;
+    public List<Boolean> getStates() {
+        return states;
     }
 
     public int getTime() {
@@ -47,8 +46,8 @@ public class PayloadItem {
         this.userId = userId;
     }
 
-    public void setLedStates(List<Boolean> ledStates) {
-        this.ledStates = ledStates;
+    public void setStates(List<Boolean> states) {
+        this.states = states;
     }
 
     public void setTime(int time) {

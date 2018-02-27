@@ -5,7 +5,6 @@ package com.farrutaps.tqhapp.controller;
  */
 public enum Parameters {
     TIME_PICKER,
-    USER_ID,
-    LED_STATES,
-    TIME;
+    USER_PICKER,
+    USER_ID;
 }

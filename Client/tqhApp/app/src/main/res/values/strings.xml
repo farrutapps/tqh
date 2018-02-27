@@ -4,6 +4,11 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="pick_user">Who are you?</string>
+    <array name="users">
+        <item>Wilde Zottel</item>
+        <item>Farrut Kätzle</item>
+    </array>
     <string name="user0">Wilde Zottel</string>
     <string name="user1">Farrut Kätzle</string>
     <string name="u0">WZ</string>
@@ -18,4 +23,4 @@
     <string name="sent_status">Torul\'s status sent to Esteful.</string>
     <string name="received_status">Esteful got Torul\'s data.</string>
 
-    </resources>
+</resources>

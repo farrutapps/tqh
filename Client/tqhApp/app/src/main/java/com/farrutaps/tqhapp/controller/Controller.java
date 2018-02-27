@@ -34,11 +34,6 @@ public class Controller {
         users.add(new User(view.getResources().getString(R.string.user0)));
         users.add(new User(view.getResources().getString(R.string.user1)));
         enableToast = true;
-
-        try {
-            // Reset the server data to avoid ledStates size problems
-            Controller.sendPost(true);
-        } catch (Exception e) {}
     }
 
     public static boolean isToastEnabled() {
@@ -126,7 +121,7 @@ public class Controller {
 
         List<PayloadItem> payload = new ArrayList<>();
         PayloadItem payloadItem = new PayloadItem(getMasterId());
-        payloadItem.setLedStates(getMaster().getStatus().getLedStatesFromStatusInfoMap());
+        payloadItem.setStates(getMaster().getStatus().getStatesFromStatusInfoMap());
         payloadItem.setTime(getMaster().getBackHome());
         payload.add(payloadItem);
 
@@ -143,11 +138,11 @@ public class Controller {
         for(int i = 0; i < response.size(); i++) {
             int id = response.get(i).getUserId();
             int time = response.get(i).getTime();
-            List<Boolean> ledStates = response.get(i).getLedStates();
+            List<Boolean> states = response.get(i).getStates();
 
             User user = getUsers().get(id);
             user.setBackHome(time);
-            user.getStatus().setStatusInfoMap(ledStates);
+            user.getStatus().setStatusInfoMap(states);
         }
         mainAdapter.notifyDataSetChanged();
         refreshBackHomeLeds();
