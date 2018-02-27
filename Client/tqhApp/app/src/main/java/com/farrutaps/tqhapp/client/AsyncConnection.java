@@ -31,7 +31,7 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
         super.onPostExecute(result);
         try {
             String responseCode = result.substring(0, 3);
-            result = (responseCode == "200") ? result.substring(3, result.length()-1) : null;
+            result = (responseCode.equals("200")) ? result.substring(3, result.length()) : null;
 
             if(responseCode.charAt(0) == '2')
                 Controller.showToast(mContext, mContext.getString(R.string.received_status));

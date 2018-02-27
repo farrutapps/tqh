@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         new Controller(this);
         // TODO delete test
         try {
-            Controller.setMaster(Controller.getUsers().get(0));
+            Controller.setMaster(Controller.getUsers().get(1));
         } catch(Exception e) {}
 
         this.initResources();
