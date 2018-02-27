@@ -9,6 +9,8 @@ import android.widget.Toast;
 import com.farrutaps.tqhapp.R;
 import com.farrutaps.tqhapp.controller.Controller;
 
+import java.net.HttpURLConnection;
+
 /**
  * Created by Sònia Batllori on 23/02/2018.
  */
@@ -27,11 +29,20 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        Toast.makeText(mContext, mContext.getString(R.string.received_status),Toast.LENGTH_LONG).show();
+        try {
+            String responseCode = result.substring(0, 3);
+            result = (responseCode == "200") ? result.substring(3, result.length()-1) : null;
 
-        if(result != null)
-        {
-            Controller.getDataFromEsteful(result);
+            if(responseCode.charAt(0) == '2')
+                Controller.showToast(mContext, mContext.getString(R.string.received_status));
+            else
+                Controller.showToast(mContext, mContext.getString(R.string.any_error));
+
+            if(result != null)
+                Controller.getDataFromEsteful(result);
+
+        } catch (Exception e) {
+            Controller.showToast(mContext,mContext.getString(R.string.error_esteful_not_available));
         }
     }
 

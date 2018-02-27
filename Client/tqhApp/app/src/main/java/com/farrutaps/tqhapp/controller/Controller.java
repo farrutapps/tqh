@@ -1,8 +1,10 @@
 package com.farrutaps.tqhapp.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.farrutaps.tqhapp.Adapters.StatusAdapter;
 import com.farrutaps.tqhapp.R;
@@ -11,9 +13,7 @@ import com.farrutaps.tqhapp.client.PayloadItem;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
 import com.farrutaps.tqhapp.view.MainActivity;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +25,33 @@ public class Controller {
     private static Activity mainActivity;
     private static View view;
     private static StatusAdapter mainAdapter;
+    private static boolean enableToast;
 
-
-    public Controller(Activity activity)
-    {
+    public Controller(Activity activity) {
         mainActivity = activity;
         view = mainActivity.getWindow().getDecorView().getRootView();
         users = new ArrayList<>();
         users.add(new User(view.getResources().getString(R.string.user0)));
         users.add(new User(view.getResources().getString(R.string.user1)));
+        enableToast = true;
+
+        try {
+            // Reset the server data to avoid ledStates size problems
+            Controller.sendPost(true);
+        } catch (Exception e) {}
+    }
+
+    public static boolean isToastEnabled() {
+        return enableToast;
+    }
+
+    public static void enableToast(boolean enable){
+        enableToast = enable;
+    }
+
+    public static void showToast(Context context, String text) {
+        if(isToastEnabled())
+            Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
     public static void setMainAdapter(StatusAdapter adapter) {
@@ -65,12 +83,7 @@ public class Controller {
     }
 
     public static void refreshUserBackHomeLeds(User user) {
-        ImageView[] leds;
-        if(getUsers().indexOf(user) == 0)
-            leds = MainActivity.PlaceholderFragment.getLedsUser0();
-        else
-            leds = MainActivity.PlaceholderFragment.getLedsUser1();
-
+        ImageView[] leds = MainActivity.PlaceholderFragment.getLedsUser(getUsers().indexOf(user));
         View view = MainActivity.PlaceholderFragment.getRootView();
 
         // Get the decimal hour in binary base with 4 digits
@@ -93,26 +106,32 @@ public class Controller {
             refreshUserBackHomeLeds(getUsers().get(i));
     }
 
-    public static void sendPost() throws Exception{
-        runConnectionThread(sendDataToEsteful());
+    public static void sendPost(boolean reset) {
+        if(reset)
+            runConnectionThread(sendResetDataToEsteful());
+        else
+            runConnectionThread(sendDataToEsteful());
     }
 
-    private static String sendDataToEsteful() throws Exception {
+    public static String sendResetDataToEsteful() {
+        List<PayloadItem> payloadItems = new ArrayList<>();
+        for(int i=0; i<getUsers().size(); i++)
+            payloadItems.add(new PayloadItem(i));
 
-        // TODO use GSON instead JSON
-        // Create the json object to send the data
-        JSONArray resultList = new JSONArray();
-        JSONObject data = new JSONObject();
-        JSONArray ledStates = new JSONArray();
+        Gson data = new Gson();
+        return data.toJson(payloadItems);
+    }
 
-        data.put(Parameters.USER_ID.name().toLowerCase(), getMasterId());
-        data.put(Parameters.TIME.name().toLowerCase(), getMaster().getBackHome());
-        for(int i=0; i<getOptions().length; i++)
-            ledStates.put(i, getMaster().getStatus().getOnFromOption(getOptions()[i]));
-        data.put(Parameters.LED_STATES.name().toLowerCase(), ledStates);
-        resultList.put(0, data);
+    private static String sendDataToEsteful() {
 
-        return resultList.toString();
+        List<PayloadItem> payload = new ArrayList<>();
+        PayloadItem payloadItem = new PayloadItem(getMasterId());
+        payloadItem.setLedStates(getMaster().getStatus().getLedStatesFromStatusInfoMap());
+        payloadItem.setTime(getMaster().getBackHome());
+        payload.add(payloadItem);
+
+        Gson data = new Gson();
+        return data.toJson(payload);
     }
 
     public static void sendGet() {
@@ -128,10 +147,7 @@ public class Controller {
 
             User user = getUsers().get(id);
             user.setBackHome(time);
-
-            // TODO debug that
-            for(int j=0; j < getOptions().length; j++)
-                user.getStatus().setOnToOption(getOptions()[j],ledStates.get(j));
+            user.getStatus().setStatusInfoMap(ledStates);
         }
         mainAdapter.notifyDataSetChanged();
         refreshBackHomeLeds();

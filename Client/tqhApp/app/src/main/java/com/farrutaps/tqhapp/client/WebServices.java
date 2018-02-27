@@ -60,9 +60,9 @@ public class WebServices {
         // Establish the connection with the server
         conn.connect();
 
-        // Get the response
+        // Get the response (not used)
         getResponse(conn, HttpURLConnection.HTTP_ACCEPTED);
-        return null;
+        return "" + conn.getResponseCode();
     }
 
     private static String read(HttpURLConnection conn) throws Exception {
@@ -85,7 +85,7 @@ public class WebServices {
 
         int responseCode = conn.getResponseCode();
 
-        String result = "";
+        String result = "" + responseCode;
         //result = "HTTP ResponseCode: " + responseCode + " " + conn.getResponseMessage() + "\n";
 
         if(responseCode == expectedResponseCode) {

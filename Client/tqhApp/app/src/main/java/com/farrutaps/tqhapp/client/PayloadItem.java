@@ -1,11 +1,14 @@
 package com.farrutaps.tqhapp.client;
 
+import com.farrutaps.tqhapp.model.Options;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,11 +16,20 @@ import java.util.List;
  */
 public class PayloadItem {
 
+    @SerializedName("user_id")
     private int userId;
-
+    @SerializedName("led_states")
     private List<Boolean> ledStates;
-
+    @SerializedName("time")
     private int time;
+
+    public PayloadItem(int userId) {
+        this.userId = userId;
+        this.time = 0;
+        this.ledStates = new ArrayList<>();
+        for(int i = 0; i< Options.values().length; i++)
+            this.ledStates.add(false);
+    }
 
     public int getUserId() {
         return userId;
@@ -45,7 +57,6 @@ public class PayloadItem {
 
     public static List<PayloadItem> parseJSON(String response) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         Type collectionType = new TypeToken<List<PayloadItem>>(){}.getType();
         Gson gson = gsonBuilder.create();
         List<PayloadItem> result = gson.fromJson(response, collectionType);

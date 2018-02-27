@@ -133,18 +133,19 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
     public void onValueChange(NumberPicker numberPicker, int i, int i1) {
         String msg;
         if(numberPicker.getValue() == 0)
-            msg = getResources().getString(R.string.back_home_dk);
+            msg = getString(R.string.back_home_dk);
         else
-            msg = getResources().getString(R.string.back_home, numberPicker.getValue());
+            msg = getString(R.string.back_home, numberPicker.getValue());
 
         // Save the time value and send it to the server
         try {
             Controller.setBackHome(numberPicker.getValue());
-            Controller.sendPost();
+            Controller.sendPost(false);
             refreshMasterBackHomeLeds();
+            Controller.showToast(this, msg);
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, getResources().getString(R.string.any_error), Toast.LENGTH_SHORT).show();
+            Controller.showToast(this, getString(R.string.any_error));
         }
     }
 
@@ -258,12 +259,18 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             });
         }
 
-        public static ImageView[] getLedsUser0() {
-            return ledsUser0;
-        }
+        public static ImageView[] getLedsUser(int id) {
+            switch(id)
+            {
+                case 0:
+                    return ledsUser0;
 
-        public static ImageView[] getLedsUser1() {
-            return ledsUser1;
+                case 1:
+                    return ledsUser1;
+
+                default:
+                    return null;
+            }
         }
 
         public static View getRootView() {
@@ -294,13 +301,13 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
                 public void onClick(View view) {
                     String msg;
                     try {
-                        Controller.sendPost();
-                        msg = getResources().getString(R.string.sent_status);
+                        Controller.sendPost(false);
+                        msg = getString(R.string.sent_status);
                         lvStatusAdapter.notifyDataSetChanged();
                     } catch (Exception e) {
-                        msg = getResources().getString(R.string.any_error);
+                        msg = getString(R.string.any_error);
                     }
-                    Toast.makeText(view.getContext(), msg, Toast.LENGTH_SHORT).show();
+                    Controller.showToast(view.getContext(), msg);
                 }
             });
         }
