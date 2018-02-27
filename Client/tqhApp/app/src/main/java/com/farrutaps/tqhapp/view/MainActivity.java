@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         try {
             Controller.setBackHome(numberPicker.getValue());
             Controller.sendPost();
-            refreshBackHomeLeds();
+            refreshMasterBackHomeLeds();
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, getResources().getString(R.string.any_error), Toast.LENGTH_SHORT).show();
@@ -154,27 +154,9 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
         dialog.show(getSupportFragmentManager(), Parameters.TIME_PICKER.name());
     }
 
-    public static void refreshBackHomeLeds() {
+    public static void refreshMasterBackHomeLeds() {
         try {
-            // TODO refresh only master or both?
-            ImageView[] leds;
-            switch(Controller.getMasterId())
-            {
-                case 0:
-                    leds = PlaceholderFragment.getLedsUser0();
-                    break;
-
-                case 1:
-                    leds = PlaceholderFragment.getLedsUser1();
-                    break;
-
-                default:
-                    leds = null;
-                    break;
-            }
-
-            Controller.refreshUserBackHomeLeds(Controller.getMaster(), leds, PlaceholderFragment.getRootView());
-
+            Controller.refreshUserBackHomeLeds(Controller.getMaster());
         } catch (Exception e) {}
     }
 
@@ -263,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements NumberPicker.OnVa
             } catch (Exception e) {}
 
             /* LEDs */
-            refreshBackHomeLeds();
+            refreshMasterBackHomeLeds();
 
             /* ImageButton */
             ibRefresh.setOnClickListener(new View.OnClickListener() {

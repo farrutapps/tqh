@@ -10,6 +10,7 @@ import com.farrutaps.tqhapp.client.AsyncConnection;
 import com.farrutaps.tqhapp.client.PayloadItem;
 import com.farrutaps.tqhapp.model.Options;
 import com.farrutaps.tqhapp.model.User;
+import com.farrutaps.tqhapp.view.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,7 +64,15 @@ public class Controller {
         getMaster().setBackHome(backHome);
     }
 
-    public static void refreshUserBackHomeLeds(User user, ImageView[] leds, View view) {
+    public static void refreshUserBackHomeLeds(User user) {
+        ImageView[] leds;
+        if(getUsers().indexOf(user) == 0)
+            leds = MainActivity.PlaceholderFragment.getLedsUser0();
+        else
+            leds = MainActivity.PlaceholderFragment.getLedsUser1();
+
+        View view = MainActivity.PlaceholderFragment.getRootView();
+
         // Get the decimal hour in binary base with 4 digits
         String binStr = Integer.toBinaryString(user.getBackHome());
         while (binStr.length() < 4) {
@@ -77,6 +86,11 @@ public class Controller {
             else
                 leds[i].setBackground(view.getResources().getDrawable(R.drawable.led_off));
         }
+    }
+
+    public static void refreshBackHomeLeds() {
+        for (int i=0; i<getUsers().size(); i++)
+            refreshUserBackHomeLeds(getUsers().get(i));
     }
 
     public static void sendPost() throws Exception{
@@ -120,6 +134,7 @@ public class Controller {
                 user.getStatus().setOnToOption(getOptions()[j],ledStates.get(j));
         }
         mainAdapter.notifyDataSetChanged();
+        refreshBackHomeLeds();
     }
 
     private static void runConnectionThread(final String data) {
