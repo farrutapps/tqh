@@ -46,7 +46,7 @@ public class AsyncConnection extends AsyncTask<String, Void, String> {
         } catch (Exception e) {
             Controller.showToast(mContext, mContext.getString(R.string.error_esteful_not_available));
             if(!Controller.isToastEnabled())
-                Toast.makeText(mContext, "Esteful is not available", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, mContext.getString(R.string.error_esteful_not_available), Toast.LENGTH_LONG).show();
         }
     }
 

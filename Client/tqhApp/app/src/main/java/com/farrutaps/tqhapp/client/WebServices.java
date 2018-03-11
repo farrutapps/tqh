@@ -14,7 +14,7 @@ import java.net.URL;
 public class WebServices {
 
     private static final int CONNECTION_TIMEOUT = 5000;
-    private static final String URI = "http://192.168.0.59:6969";
+    private static final String URI = "http://esteful.feste-ip.net:57935";//"http://192.168.0.59:6969";
 
     public enum Request {
         GET(URI + "/status"),
